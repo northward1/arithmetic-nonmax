@@ -3,4 +3,10 @@ name = "arithmetic-nonmax"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
+[dev-dependencies]
+divan = "0.1.21"
+rand = "0.9.2"
+
+[[bench]]
+name = "comparison"
+harness = false

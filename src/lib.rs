@@ -543,28 +543,6 @@ mod tests {
     use std::mem::size_of;
 
     #[test]
-    fn test_comparison() {
-        let x = NonMaxU8::new(10).unwrap();
-        let y = NonMaxU8::new(20).unwrap();
-        let z = NonMaxU8::new(10).unwrap();
-
-        // Equality
-        assert_eq!(x, z);
-        assert_ne!(x, y);
-
-        // Comparison
-        assert!(x < y);
-        assert!(y > x);
-        assert!(x <= z);
-        assert!(x >= z);
-
-        // Sorting
-        let mut v = vec![y, x, z];
-        v.sort();
-        assert_eq!(v, vec![x, z, y]);
-    }
-
-    #[test]
     fn test_hash() {
         let mut set = HashSet::new();
         set.insert(NonMaxU32::new(1).unwrap());

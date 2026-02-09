@@ -55,6 +55,15 @@ assert_eq!(std::mem::size_of::<Option<NonMaxI128>>(), 16);
 |Dijkstra法 ($V=5.0 \times 10^5, E = 5.0 \times 10^6$)|450ms 18.8MB|505ms 20.8MB|
 |Floyd-Warshall法 ($V=5.0 \times 10^2, E = 5.0 \times 10^3$)|103ms 1.00MB|112ms 2.00MB|
 
+## 使用例
+
+このライブラリを使用して[Aizu Online Judge](https://onlinejudge.u-aizu.ac.jp/home)の問題にACできるプログラムを置いています。
+ただし、ライブラリを適切に1ファイルにバンドルする必要があります。
+
+* [GRL_1_A: Single Source Shortest Path](examples/dijkstra.rs): Dijkstra法で距離を`Option<NonMax<u32>>`で表し、到達不可能であることを`None`で表す。
+* [GRL_1_C: All Pairs Shortest Path](examples/floyd_warshall.rs): Floyd-Warshall法で距離を`Option<NonMax<i32>>`で表し、到達不可能であることを`None`で表す。
+* [DSL_1_A: Disjoint Set](examples/union_find.rs): Union-Findで親の添え字を`Option<NonMaxUsize>`で管理する。
+
 ## 関連ライブラリ
 
 * [`nonmax`](https://github.com/LPGhatguy/nonmax)

@@ -1,4 +1,4 @@
-// AOJ DSL_1_A: Disjoint Set Union
+// AOJ DSL_1_A: Disjoint Set
 // URL: https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/1/DSL_1_A
 #![allow(non_snake_case, unused_must_use, unused_imports)]
 use arithmetic_nonmax::NonMaxUsize;

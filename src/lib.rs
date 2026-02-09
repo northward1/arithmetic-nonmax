@@ -67,7 +67,7 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
         unsafe { Value::new(value).to_inner_repr().to_nonmax_unchecked() }
     }
 
-    fn to_real_repr(&self) -> Value<T, Real> {
+    fn to_real_repr(self) -> Value<T, Real> {
         T::from_nonzero(self.0).to_real_repr()
     }
 
@@ -437,10 +437,10 @@ impl_non_max_item!(
 );
 
 #[doc(hidden)]
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Real;
 #[doc(hidden)]
-#[derive(Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Inner;
 
 #[doc(hidden)]

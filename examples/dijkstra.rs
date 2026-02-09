@@ -62,10 +62,10 @@ fn main() {
     });
 
     while let Some(State { cost, position }) = pq.pop() {
-        if let Some(d) = dists[position] {
-            if cost > d {
-                continue;
-            }
+        if let Some(d) = dists[position]
+            && cost > d
+        {
+            continue;
         }
 
         for &(next_node, edge_cost) in &adj[position] {

@@ -50,10 +50,12 @@ assert_eq!(std::mem::size_of::<Option<NonMaxI128>>(), 16);
 
 `benches/comparison.rs`にベンチマークがあります。`NonMax`型を利用した場合としない場合で実行時間やメモリの使用量を比較しています。
 
-||`NonMax`を利用した場合|`NonMax`を利用しない場合|
-|---|---|---|
-|Dijkstra法 ($V=5.0 \times 10^5, E = 5.0 \times 10^6$)|450ms 18.8MB|505ms 20.8MB|
-|Floyd-Warshall法 ($V=5.0 \times 10^2, E = 5.0 \times 10^3$)|103ms 1.00MB|112ms 2.00MB|
+||`NonMax`を利用した場合|`NonMax`を利用しない場合|番兵を利用した場合|
+|---|---|---|---|
+|Dijkstra法 ($V=5.0 \times 10^5, E = 5.0 \times 10^6$)|447ms/18.8MB|487ms/20.8MB|456ms/18.8MB|
+|Floyd-Warshall法 ($V=5.0 \times 10^2, E = 5.0 \times 10^3$)|100ms/1.00MB|126ms/2.00MB|83ms/1.00MB|
+
+Dijkstra法において、`NonMax`を利用した場合が番兵を利用した場合よりも高速になっています。これは、`NonMaxU32`で`None`が`0`であることを利用した特殊な最適化が機能している結果です。
 
 ## 使用例
 

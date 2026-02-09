@@ -136,6 +136,44 @@ fn floyd_warshall_nonmax() {
     black_box(dist);
 }
 
+#[divan::bench]
+fn floyd_warshall_manual_inf() {
+    let graph = get_small_graph();
+    let v = graph.v;
+    let mut dist = vec![u32::MAX; v * v];
+
+    for i in 0..v {
+        dist[i * v + i] = 0;
+    }
+    for &(s, t, d) in &graph.edges {
+        let idx = s * v + t;
+        if d < dist[idx] {
+            dist[idx] = d;
+        }
+    }
+
+    for k in 0..v {
+        for i in 0..v {
+            let dik = dist[i * v + k];
+            if dik == u32::MAX {
+                continue;
+            }
+            for j in 0..v {
+                let dkj = dist[k * v + j];
+                if dkj == u32::MAX {
+                    continue;
+                }
+                let new_dist = dik + dkj;
+                let ij = i * v + j;
+                if new_dist < dist[ij] {
+                    dist[ij] = new_dist;
+                }
+            }
+        }
+    }
+    black_box(dist);
+}
+
 // --- Dijkstra (隣接リスト事前構築版) ---
 
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -209,6 +247,37 @@ fn dijkstra_nonmax() {
             let next_dist = cost + edge_cost;
             if dists[next].is_none() || Some(next_dist) < dists[next] {
                 dists[next] = Some(next_dist);
+                pq.push(State {
+                    cost: next_dist,
+                    position: next,
+                });
+            }
+        }
+    }
+    black_box(dists);
+}
+
+#[divan::bench]
+fn dijkstra_manual_inf() {
+    let graph = get_large_graph();
+    let v = graph.v;
+    let mut dists = vec![u32::MAX; v];
+    let mut pq = BinaryHeap::new();
+
+    dists[0] = 0;
+    pq.push(State {
+        cost: 0u32,
+        position: 0,
+    });
+
+    while let Some(State { cost, position }) = pq.pop() {
+        if cost > dists[position] {
+            continue;
+        }
+        for &(next, edge_cost) in &graph.adj[position] {
+            let next_dist = cost + edge_cost;
+            if next_dist < dists[next] {
+                dists[next] = next_dist;
                 pq.push(State {
                     cost: next_dist,
                     position: next,

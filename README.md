@@ -50,10 +50,12 @@ assert_eq!(std::mem::size_of::<Option<NonMaxI128>>(), 16);
 
 Benchmarks are available in `benches/comparison.rs`. They compare execution time and memory usage between using and not using `NonMax` types.
 
-| Algorithm | With `NonMax` | Without `NonMax` |
-|---|---|---|
-| Dijkstra ($V=5.0 \times 10^5, E = 5.0 \times 10^6$) | 450ms / 18.8MB | 505ms / 20.8MB |
-| Floyd-Warshall ($V=5.0 \times 10^2, E = 5.0 \times 10^3$) | 103ms / 1.00MB | 112ms / 2.00MB |
+| Algorithm | With `NonMax` | Without `NonMax` | With Sentinel |
+|---|---|---|---|
+| Dijkstra ($V=5.0 \times 10^5, E = 5.0 \times 10^6$) | 447ms / 18.8MB | 487ms / 20.8MB | 456ms / 18.8MB |
+| Floyd-Warshall ($V=5.0 \times 10^2, E = 5.0 \times 10^3$) | 100ms / 1.00MB | 126ms / 2.00MB | 83ms / 1.00MB |
+
+In the Dijkstra algorithm, the `NonMax` implementation is faster than using manual sentinel values. This is due to specialized optimizations leveraged by the internal representation where `None` is mapped to `0`.
 
 ## Examples
 

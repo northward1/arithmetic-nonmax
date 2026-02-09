@@ -9,12 +9,12 @@ The `arithmetic-nonmax` crate provides `NonMax*` types for integer types that ar
 Additionally, arithmetic operations can be written intuitively as shown below. For example, in shortest path algorithms, using the `Option<NonMax*>` type allows you to leverage the type system while optimizing the memory layout. See [Benchmarks](#benchmarks) for more details.
 
 ```rust
-use arithmetic_nonmax::NonMaxU32;
+use arithmetic_nonmax::{NonMaxU32, non_max};
 
 let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
 
-let b = NonMaxU32::ZERO;
-let c = a + b; // Arithmetic operations between NonMaxU32 types
+let b = non_max!(10); // Conveniently create values with the non_max! macro
+let c = b - a; // Arithmetic operations between NonMax types
 assert_eq!(a, c);
 
 let d = a * 5; // Arithmetic operations with primitive integers

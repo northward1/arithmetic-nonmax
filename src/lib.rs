@@ -21,6 +21,43 @@ use core::marker::PhantomData;
 use core::num::NonZero;
 use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
 
+/// Creates a `NonMax` value at compile-time.
+///
+/// This macro checks at compile-time that the provided value is not the maximum
+/// value for its type. If the value is the maximum, the program will fail to compile.
+///
+/// # Examples
+/// ```
+/// # use arithmetic_nonmax::non_max;
+/// let x = non_max!(123u8);
+/// ```
+///
+/// ```compile_fail
+/// # use arithmetic_nonmax::non_max;
+/// let x = non_max!(255u8); // This fails to compile
+/// ```
+///
+/// ```compile_fail
+/// # use arithmetic_nonmax::non_max;
+/// let x = non_max!(127i8); // i8::MAX fails
+/// ```
+///
+/// ```compile_fail
+/// # use arithmetic_nonmax::non_max;
+/// let x = non_max!(u16::MAX); // Explicit MAX fails
+/// ```
+#[macro_export]
+macro_rules! non_max {
+    ($val:expr) => {{
+        const _: () = const {
+            if $val == <_ as $crate::NonMaxItem>::MAX {
+                panic!("provided value is the maximum value for this type");
+            }
+        };
+        unsafe { <_ as $crate::NonMaxItem>::create_nonmax_unchecked($val) }
+    }};
+}
+
 /// Error type returned when a value is the maximum for its type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct MaxValueError;
@@ -352,6 +389,7 @@ impl<T: NonMaxItem + Copy> Default for NonMax<T> {
 pub trait NonMaxItem: Sized {
     type NonZero: Copy + PartialEq + Eq + PartialOrd + Ord + Hash;
     const MIN_VALUE: Self;
+    const MAX: Self;
     const MAX_SAFE: Self;
     const ZERO_VALUE: Self;
     fn transform(self) -> Self;
@@ -364,6 +402,12 @@ pub trait NonMaxItem: Sized {
     fn checked_mul(self, rhs: Self) -> Option<Self>;
     fn checked_div(self, rhs: Self) -> Option<Self>;
     fn checked_rem(self, rhs: Self) -> Option<Self>;
+
+    /// Creates a `NonMax` from this value without checking.
+    ///
+    /// # Safety
+    /// The value must not be the maximum value.
+    unsafe fn create_nonmax_unchecked(self) -> NonMax<Self>;
 }
 
 macro_rules! impl_non_max_item {
@@ -372,6 +416,7 @@ macro_rules! impl_non_max_item {
             impl NonMaxItem for $t {
                 type NonZero = NonZero<$t>;
                 const MIN_VALUE: Self = <$t>::MIN;
+                const MAX: Self = <$t>::MAX;
                 const MAX_SAFE: Self = <$t>::MAX - 1;
                 const ZERO_VALUE: Self = 0;
                 fn transform(self) -> Self {
@@ -392,6 +437,10 @@ macro_rules! impl_non_max_item {
                 fn checked_mul(self, rhs: Self) -> Option<Self> { self.checked_mul(rhs) }
                 fn checked_div(self, rhs: Self) -> Option<Self> { self.checked_div(rhs) }
                 fn checked_rem(self, rhs: Self) -> Option<Self> { self.checked_rem(rhs) }
+
+                unsafe fn create_nonmax_unchecked(self) -> NonMax<Self> {
+                    unsafe { NonMax::<$t>::new_unchecked(self) }
+                }
             }
 
             impl From<NonMax<$t>> for $t {
@@ -697,5 +746,17 @@ mod tests {
         assert!(NonMaxU8::ZERO.is_zero());
         assert_eq!(NonMaxI32::ZERO.get(), 0);
         assert!(NonMaxI32::ZERO.is_zero());
+    }
+
+    #[test]
+    fn test_non_max_macro() {
+        let x = non_max!(123u8);
+        assert_eq!(x.get(), 123);
+
+        let y = non_max!(456u32);
+        assert_eq!(y.get(), 456);
+
+        let z = non_max!(-10i32);
+        assert_eq!(z.get(), -10);
     }
 }

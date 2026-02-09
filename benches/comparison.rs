@@ -49,11 +49,11 @@ fn get_large_graph() -> &'static PreparedGraph {
         let v = 500_000;
         let mut adj = vec![vec![]; v];
         let mut rng = rand::rngs::StdRng::seed_from_u64(42);
-        for s in 0..v {
+        for row in &mut adj {
             for _ in 0..10 {
                 let t = rng.random_range(0..v);
                 let d = rng.random_range(1..1001);
-                adj[s].push((t, d));
+                row.push((t, d));
             }
         }
         PreparedGraph {

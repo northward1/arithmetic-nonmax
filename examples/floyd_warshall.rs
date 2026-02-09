@@ -21,8 +21,8 @@ fn main() {
     let E = input!(usize);
 
     let mut dist = vec![vec![None; V]; V];
-    for i in 0..V {
-        dist[i][i] = Some(NonMax::new(0).unwrap());
+    for (i, row) in dist.iter_mut().enumerate() {
+        row[i] = Some(NonMax::new(0).unwrap());
     }
 
     for _ in 0..E {
@@ -51,18 +51,18 @@ fn main() {
     }
 
     // Negative cycle check
-    for i in 0..V {
-        if let Some(d) = dist[i][i] {
-            if i32::from(d) < 0 {
-                writeln!(buffer, "NEGATIVE CYCLE");
-                return;
-            }
+    for (i, row) in dist.iter().enumerate() {
+        if let Some(d) = row[i]
+            && i32::from(d) < 0
+        {
+            writeln!(buffer, "NEGATIVE CYCLE");
+            return;
         }
     }
 
-    for i in 0..V {
-        for j in 0..V {
-            match dist[i][j] {
+    for row in &dist {
+        for (j, item) in row.iter().enumerate() {
+            match item {
                 Some(d) => write!(buffer, "{}", d),
                 None => write!(buffer, "INF"),
             };

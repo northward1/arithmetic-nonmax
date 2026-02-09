@@ -1,5 +1,9 @@
 # Arithmetic Nonmax
 
+[![Crates.io](https://img.shields.io/crates/v/arithmetic-nonmax.svg)](https://crates.io/crates/arithmetic-nonmax)
+[![Docs.rs](https://docs.rs/arithmetic-nonmax/badge.svg)](https://docs.rs/arithmetic-nonmax)
+[![License](https://img.shields.io/crates/l/arithmetic-nonmax.svg)](LICENSE)
+
 `arithmetic-nonmax`クレートは、整数型がその最大値を取らないことが保証されているとき、`NonMax*`型を利用できるようにします。`NonMax*`型を利用することで、メモリレイアウトの最適化を受けることができるようになります。
 
 また、四則演算を以下のように直感的に記述できます。例えば、最短経路問題では、`Option<NonMax*>`型を使うことで、型システムを活用しながら、メモリレイアウトの最適化も行えます。それについては、[ベンチマーク](#ベンチマーク)を参考にしてください。

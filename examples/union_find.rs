@@ -73,12 +73,10 @@ fn main() {
 
         if com == 0 {
             uf.unite(x, y);
+        } else if uf.same(x, y) {
+            writeln!(buffer, "1");
         } else {
-            if uf.same(x, y) {
-                writeln!(buffer, "1");
-            } else {
-                writeln!(buffer, "0");
-            }
+            writeln!(buffer, "0");
         }
     }
 }

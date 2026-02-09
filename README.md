@@ -55,6 +55,15 @@ Benchmarks are available in `benches/comparison.rs`. They compare execution time
 | Dijkstra ($V=5.0 \times 10^5, E = 5.0 \times 10^6$) | 450ms / 18.8MB | 505ms / 20.8MB |
 | Floyd-Warshall ($V=5.0 \times 10^2, E = 5.0 \times 10^3$) | 103ms / 1.00MB | 112ms / 2.00MB |
 
+## Examples
+
+You can find programs that solve [Aizu Online Judge](https://onlinejudge.u-aizu.ac.jp/home) problems using this library in the `examples/` directory.
+Note that you need to bundle the library into a single file when submitting to an online judge.
+
+* [GRL_1_A: Single Source Shortest Path](examples/dijkstra.rs): Uses `Option<NonMax<u32>>` for distances, representing unreachable nodes as `None`.
+* [GRL_1_C: All Pairs Shortest Path](examples/floyd_warshall.rs): Uses `Option<NonMax<i32>>` for distances, representing unreachable nodes as `None`.
+* [DSL_1_A: Disjoint Set](examples/union_find.rs): Manages parent indices in a Union-Find data structure using `Option<NonMaxUsize>`.
+
 ## Similar Libraries
 
 * [`nonmax`](https://github.com/LPGhatguy/nonmax)

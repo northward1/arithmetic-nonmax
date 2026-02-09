@@ -12,12 +12,14 @@
 //! | `i32`     | 4                | 8                        | **4**                           |
 //! | `u8`      | 1                | 2                        | **1**                           |
 
-use std::convert::TryFrom;
-use std::fmt::{self, Binary, Display, LowerHex, Octal, UpperHex};
-use std::hash::Hash;
-use std::marker::PhantomData;
-use std::num::NonZero;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
+#![no_std]
+
+use core::convert::TryFrom;
+use core::fmt::{self, Binary, Display, LowerHex, Octal, UpperHex};
+use core::hash::Hash;
+use core::marker::PhantomData;
+use core::num::NonZero;
+use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
 
 /// Error type returned when a value is the maximum for its type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -29,7 +31,7 @@ impl Display for MaxValueError {
     }
 }
 
-impl std::error::Error for MaxValueError {}
+impl core::error::Error for MaxValueError {}
 
 /// A wrapper type for an integer that cannot be its maximum value.
 ///
@@ -39,7 +41,7 @@ impl std::error::Error for MaxValueError {}
 /// # Examples
 /// ```
 /// # use arithmetic_nonmax::NonMaxU32;
-/// # use std::mem::size_of;
+/// # use core::mem::size_of;
 /// assert_eq!(size_of::<NonMaxU32>(), 4);
 /// assert_eq!(size_of::<Option<NonMaxU32>>(), 4);
 /// ```
@@ -288,13 +290,13 @@ impl<T: NonMaxItem + Copy + Rem<Output = T>> RemAssign<T> for NonMax<T> {
 }
 
 impl<T: NonMaxItem + Copy + PartialOrd> PartialOrd for NonMax<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
         self.to_real_repr().partial_cmp(&other.to_real_repr())
     }
 }
 
 impl<T: NonMaxItem + Copy + Ord> Ord for NonMax<T> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         self.to_real_repr().cmp(&other.to_real_repr())
     }
 }
@@ -519,13 +521,13 @@ impl<T: NonMaxItem + Copy> Value<T, Inner> {
 }
 
 impl<T: NonMaxItem + Copy + PartialOrd> PartialOrd for Value<T, Real> {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
         self.value().partial_cmp(&other.value())
     }
 }
 
 impl<T: NonMaxItem + Copy + Ord> Ord for Value<T, Real> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         self.value().cmp(&other.value())
     }
 }
@@ -538,9 +540,10 @@ impl<T: NonMaxItem + Copy + Display> Display for Value<T, Real> {
 
 #[cfg(test)]
 mod tests {
+    extern crate std;
     use super::*;
+    use core::mem::size_of;
     use std::collections::HashSet;
-    use std::mem::size_of;
 
     #[test]
     fn test_hash() {
@@ -640,10 +643,10 @@ mod tests {
     #[test]
     fn test_formatting() {
         let x = NonMaxU8::new(254).unwrap();
-        assert_eq!(format!("{}", x), "254");
-        assert_eq!(format!("{:b}", x), "11111110");
-        assert_eq!(format!("{:o}", x), "376");
-        assert_eq!(format!("{:x}", x), "fe");
-        assert_eq!(format!("{:X}", x), "FE");
+        assert_eq!(std::format!("{}", x), "254");
+        assert_eq!(std::format!("{:b}", x), "11111110");
+        assert_eq!(std::format!("{:o}", x), "376");
+        assert_eq!(std::format!("{:x}", x), "fe");
+        assert_eq!(std::format!("{:X}", x), "FE");
     }
 }

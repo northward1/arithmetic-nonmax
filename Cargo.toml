@@ -2,6 +2,12 @@
 name = "arithmetic-nonmax"
 version = "0.1.0"
 edition = "2024"
+description = "Integer types that cannot be the maximum value, allowing for memory layout optimization and intuitive arithmetic operations."
+license = "CC0-1.0"
+repository = "https://github.com/northward1/arithmetic-nonmax"
+readme = "README.md"
+keywords = ["nonmax", "optimization", "niche", "integer", "arithmetic"]
+categories = ["data-structures", "no-std", "embedded"]
 
 [dev-dependencies]
 divan = "0.1.21"

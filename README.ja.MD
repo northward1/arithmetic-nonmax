@@ -1,5 +1,9 @@
 # Arithmetic Nonmax
 
+[![Crates.io](https://img.shields.io/crates/v/arithmetic-nonmax.svg)](https://crates.io/crates/arithmetic-nonmax)
+[![Docs.rs](https://docs.rs/arithmetic-nonmax/badge.svg)](https://docs.rs/arithmetic-nonmax)
+[![License](https://img.shields.io/crates/l/arithmetic-nonmax.svg)](LICENSE)
+
 `arithmetic-nonmax`クレートは、整数型がその最大値を取らないことが保証されているとき、`NonMax*`型を利用できるようにします。`NonMax*`型を利用することで、メモリレイアウトの最適化を受けることができるようになります。
 
 また、四則演算を以下のように直感的に記述できます。例えば、最短経路問題では、`Option<NonMax*>`型を使うことで、型システムを活用しながら、メモリレイアウトの最適化も行えます。それについては、[ベンチマーク](#ベンチマーク)を参考にしてください。
@@ -9,11 +13,12 @@ use arithmetic_nonmax::NonMaxU32;
 
 let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
 
-let b = NonMaxU32::new(3).unwrap();
+let b = NonMaxU32::ZERO;
 let c = a + b; // NonMaxU32同士で四則演算ができる 
-assert!(a < c);
+assert_eq!(a, c);
 
 let d = a * 5; // 整数型とも四則演算ができる
+assert!(a < d);
 assert_eq!(d.to_string(), "25"); // 文字列に変換できる
 ```
 

@@ -1,27 +1,28 @@
 # Arithmetic Nonmax
 
+[![Crates.io](https://img.shields.io/crates/v/arithmetic-nonmax.svg)](https://crates.io/crates/arithmetic-nonmax)
+[![Docs.rs](https://docs.rs/arithmetic-nonmax/badge.svg)](https://docs.rs/arithmetic-nonmax)
+[![License](https://img.shields.io/crates/l/arithmetic-nonmax.svg)](LICENSE)
+
 The `arithmetic-nonmax` crate provides `NonMax*` types for integer types that are guaranteed to never be their maximum value (`MAX`). Using `NonMax*` types enables memory layout optimization.
 
 Additionally, arithmetic operations can be written intuitively as shown below. For example, in shortest path algorithms, using the `Option<NonMax*>` type allows you to leverage the type system while optimizing the memory layout. See [Benchmarks](#benchmarks) for more details.
-
-## Usage
 
 ```rust
 use arithmetic_nonmax::NonMaxU32;
 
 let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
 
-let b = NonMaxU32::new(3).unwrap();
+let b = NonMaxU32::ZERO;
 let c = a + b; // Arithmetic operations between NonMaxU32 types
-assert!(a < c);
+assert_eq!(a, c);
 
 let d = a * 5; // Arithmetic operations with primitive integers
+assert!(a < d);
 assert_eq!(d.to_string(), "25"); // Can be converted to string
 ```
 
-## Memory Optimization
-
-You can verify the memory layout optimization as follows:
+Memory layout optimization can be verified as follows:
 
 ```rust
 use arithmetic_nonmax::*;

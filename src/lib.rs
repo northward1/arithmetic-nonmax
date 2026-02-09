@@ -61,14 +61,6 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
         Value::new(value).to_inner_repr().to_nonmax()
     }
 
-    /// Creates a new `NonMax` without checking the value.
-    ///
-    /// # Safety
-    /// The value must not be the maximum value of the underlying type.
-    pub unsafe fn new_unchecked(value: T) -> Self {
-        unsafe { Value::new(value).to_inner_repr().to_nonmax_unchecked() }
-    }
-
     fn to_real_repr(self) -> Value<T, Real> {
         T::from_nonzero(self.0).to_real_repr()
     }
@@ -84,7 +76,26 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
     pub fn get(&self) -> T {
         self.to_real_repr().value()
     }
+}
 
+impl<T: NonMaxItem + Copy + PartialEq> NonMax<T> {
+    /// Returns `true` if this is the minimum value.
+    pub fn is_min(&self) -> bool {
+        self.get() == T::MIN_VALUE
+    }
+
+    /// Returns `true` if this is the maximum possible value for this type.
+    pub fn is_max(&self) -> bool {
+        self.get() == T::MAX_SAFE
+    }
+
+    /// Returns `true` if the value is zero.
+    pub fn is_zero(&self) -> bool {
+        self.get() == T::ZERO_VALUE
+    }
+}
+
+impl<T: NonMaxItem + Copy> NonMax<T> {
     /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow occurred
     /// or if the result is the maximum value.
     pub fn checked_add(self, rhs: Self) -> Option<Self> {
@@ -241,7 +252,7 @@ impl<T: NonMaxItem + Copy + Div<Output = T>> Div for NonMax<T> {
     }
 }
 
-impl<T: NonMaxItem + Copy + Div<Output = T>> Div<T> for NonMax<T> {
+impl<T: NonMaxItem + Copy + Div<T, Output = T>> Div<T> for NonMax<T> {
     type Output = Self;
     fn div(self, rhs: T) -> Self::Output {
         self.checked_div_val(rhs)
@@ -255,7 +266,7 @@ impl<T: NonMaxItem + Copy + Div<Output = T>> DivAssign for NonMax<T> {
     }
 }
 
-impl<T: NonMaxItem + Copy + Div<Output = T>> DivAssign<T> for NonMax<T> {
+impl<T: NonMaxItem + Copy + Div<T, Output = T>> DivAssign<T> for NonMax<T> {
     fn div_assign(&mut self, rhs: T) {
         *self = *self / rhs;
     }
@@ -269,7 +280,7 @@ impl<T: NonMaxItem + Copy + Rem<Output = T>> Rem for NonMax<T> {
     }
 }
 
-impl<T: NonMaxItem + Copy + Rem<Output = T>> Rem<T> for NonMax<T> {
+impl<T: NonMaxItem + Copy + Rem<T, Output = T>> Rem<T> for NonMax<T> {
     type Output = Self;
     fn rem(self, rhs: T) -> Self::Output {
         self.checked_rem_val(rhs)
@@ -283,7 +294,7 @@ impl<T: NonMaxItem + Copy + Rem<Output = T>> RemAssign for NonMax<T> {
     }
 }
 
-impl<T: NonMaxItem + Copy + Rem<Output = T>> RemAssign<T> for NonMax<T> {
+impl<T: NonMaxItem + Copy + Rem<T, Output = T>> RemAssign<T> for NonMax<T> {
     fn rem_assign(&mut self, rhs: T) {
         *self = *self % rhs;
     }
@@ -333,14 +344,16 @@ impl<T: NonMaxItem + Copy + UpperHex> UpperHex for NonMax<T> {
 
 impl<T: NonMaxItem + Copy> Default for NonMax<T> {
     fn default() -> Self {
-        Self::new(T::ZERO).unwrap()
+        Self::new(T::ZERO_VALUE).unwrap()
     }
 }
 
 #[doc(hidden)]
 pub trait NonMaxItem: Sized {
     type NonZero: Copy + PartialEq + Eq + PartialOrd + Ord + Hash;
-    const ZERO: Self;
+    const MIN_VALUE: Self;
+    const MAX_SAFE: Self;
+    const ZERO_VALUE: Self;
     fn transform(self) -> Self;
     fn to_nonzero(value: Value<Self, Inner>) -> Option<Self::NonZero>;
     unsafe fn to_nonzero_unchecked(value: Value<Self, Inner>) -> Self::NonZero;
@@ -358,7 +371,9 @@ macro_rules! impl_non_max_item {
         $(
             impl NonMaxItem for $t {
                 type NonZero = NonZero<$t>;
-                const ZERO: Self = 0;
+                const MIN_VALUE: Self = <$t>::MIN;
+                const MAX_SAFE: Self = <$t>::MAX - 1;
+                const ZERO_VALUE: Self = 0;
                 fn transform(self) -> Self {
                     self ^ <$t>::MAX
                 }
@@ -395,6 +410,23 @@ macro_rules! impl_non_max_item {
 
             #[doc = $doc]
             pub type $name = NonMax<$t>;
+
+            impl $name {
+                /// The minimum value for this type.
+                pub const MIN: Self = unsafe { Self(NonZero::new_unchecked(<$t>::MIN ^ <$t>::MAX)) };
+                /// The maximum value for this type.
+                pub const MAX: Self = unsafe { Self(NonZero::new_unchecked((<$t>::MAX - 1) ^ <$t>::MAX)) };
+                /// The zero value for this type.
+                pub const ZERO: Self = unsafe { Self(NonZero::new_unchecked(0 ^ <$t>::MAX)) };
+
+                /// Creates a new `NonMax` without checking the value.
+                ///
+                /// # Safety
+                /// The value must not be the maximum value of the underlying type.
+                pub const unsafe fn new_unchecked(value: $t) -> Self {
+                    Self(unsafe { NonZero::new_unchecked(value ^ <$t>::MAX) })
+                }
+            }
         )*
     };
 }
@@ -513,10 +545,6 @@ impl<T: NonMaxItem + Copy> Value<T, Inner> {
 
     fn to_nonmax(self) -> Option<NonMax<T>> {
         T::to_nonzero(self).map(NonMax)
-    }
-
-    unsafe fn to_nonmax_unchecked(self) -> NonMax<T> {
-        NonMax(unsafe { T::to_nonzero_unchecked(self) })
     }
 }
 
@@ -648,5 +676,26 @@ mod tests {
         assert_eq!(std::format!("{:o}", x), "376");
         assert_eq!(std::format!("{:x}", x), "fe");
         assert_eq!(std::format!("{:X}", x), "FE");
+    }
+
+    #[test]
+    fn test_min_max_constants() {
+        assert_eq!(NonMaxU8::MIN.get(), 0);
+        assert_eq!(NonMaxU8::MAX.get(), 254);
+        assert!(NonMaxU8::MIN.is_min());
+        assert!(NonMaxU8::MAX.is_max());
+        assert!(!NonMaxU8::MIN.is_max());
+        assert!(!NonMaxU8::MAX.is_min());
+
+        assert_eq!(NonMaxI8::MIN.get(), -128);
+        assert_eq!(NonMaxI8::MAX.get(), 126);
+    }
+
+    #[test]
+    fn test_zero_constant() {
+        assert_eq!(NonMaxU8::ZERO.get(), 0);
+        assert!(NonMaxU8::ZERO.is_zero());
+        assert_eq!(NonMaxI32::ZERO.get(), 0);
+        assert!(NonMaxI32::ZERO.is_zero());
     }
 }

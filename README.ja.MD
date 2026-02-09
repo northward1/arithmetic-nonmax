@@ -9,11 +9,12 @@ use arithmetic_nonmax::NonMaxU32;
 
 let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
 
-let b = NonMaxU32::new(3).unwrap();
+let b = NonMaxU32::ZERO;
 let c = a + b; // NonMaxU32同士で四則演算ができる 
-assert!(a < c);
+assert_eq!(a, c);
 
 let d = a * 5; // 整数型とも四則演算ができる
+assert!(a < d);
 assert_eq!(d.to_string(), "25"); // 文字列に変換できる
 ```
 

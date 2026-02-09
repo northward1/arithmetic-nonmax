@@ -9,12 +9,12 @@
 また、四則演算を以下のように直感的に記述できます。例えば、最短経路問題では、`Option<NonMax*>`型を使うことで、型システムを活用しながら、メモリレイアウトの最適化も行えます。それについては、[ベンチマーク](#ベンチマーク)を参考にしてください。
 
 ```rust
-use arithmetic_nonmax::NonMaxU32;
+use arithmetic_nonmax::{NonMaxU32, non_max};
 
 let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
 
-let b = NonMaxU32::ZERO;
-let c = a + b; // NonMaxU32同士で四則演算ができる 
+let b = non_max!(10); // non_max!マクロで簡潔に値を生成できる
+let c = b - a; // NonMaxU32同士で四則演算ができる 
 assert_eq!(a, c);
 
 let d = a * 5; // 整数型とも四則演算ができる

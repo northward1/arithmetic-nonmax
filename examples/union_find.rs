@@ -6,6 +6,7 @@ use std::io::{self, prelude::*};
 
 struct UnionFind {
     // parent[i] == None means i is a root
+    // Using Option<NonMaxUsize> saves 50% memory compared to Option<usize>
     parent: Vec<Option<NonMaxUsize>>,
     size: Vec<usize>,
 }
@@ -18,32 +19,35 @@ impl UnionFind {
         }
     }
 
-    fn find(&mut self, i: usize) -> usize {
+    // By taking NonMaxUsize as argument, we can use it directly for indexing
+    fn find(&mut self, i: NonMaxUsize) -> NonMaxUsize {
         match self.parent[i] {
             None => i,
             Some(p) => {
-                let root = self.find(p.get());
+                // p is NonMaxUsize, so it can be passed directly to find and used as index
+                let root = self.find(p);
                 // Path compression
-                self.parent[i] = Some(NonMaxUsize::new(root).unwrap());
+                self.parent[i] = Some(root);
                 root
             }
         }
     }
 
-    fn unite(&mut self, i: usize, j: usize) {
+    fn unite(&mut self, i: NonMaxUsize, j: NonMaxUsize) {
         let mut root_i = self.find(i);
         let mut root_j = self.find(j);
         if root_i != root_j {
             // Union by size
+            // root_i and root_j can be used as indices for self.size directly
             if self.size[root_i] < self.size[root_j] {
                 std::mem::swap(&mut root_i, &mut root_j);
             }
-            self.parent[root_j] = Some(NonMaxUsize::new(root_i).unwrap());
+            self.parent[root_j] = Some(root_i);
             self.size[root_i] += self.size[root_j];
         }
     }
 
-    fn same(&mut self, i: usize, j: usize) -> bool {
+    fn same(&mut self, i: NonMaxUsize, j: NonMaxUsize) -> bool {
         self.find(i) == self.find(j)
     }
 }
@@ -68,8 +72,9 @@ fn main() {
 
     for _ in 0..q {
         let com = input!(u8);
-        let x = input!(usize);
-        let y = input!(usize);
+        // Convert input usize to NonMaxUsize immediately
+        let x = NonMaxUsize::new(input!(usize)).expect("input exceeds usize::MAX - 1");
+        let y = NonMaxUsize::new(input!(usize)).expect("input exceeds usize::MAX - 1");
 
         if com == 0 {
             uf.unite(x, y);

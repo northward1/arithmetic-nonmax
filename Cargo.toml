@@ -9,6 +9,11 @@ readme = "README.md"
 keywords = ["nonmax", "optimization", "niche", "integer", "arithmetic"]
 categories = ["data-structures", "no-std", "embedded"]
 
+[features]
+default = ["std"]
+alloc = []
+std = ["alloc"]
+
 [dev-dependencies]
 divan = "0.1.21"
 rand = "0.9.2"

@@ -20,6 +20,10 @@ assert_eq!(a, c);
 let d = a * 5; // 整数型とも四則演算ができる
 assert!(a < d);
 assert_eq!(d.to_string(), "25"); // 文字列に変換できる
+
+let array = [non_max!(3), non_max!(4), non_max!(5)];
+let e = array[non_max!(2)]; // 添え字によるアクセスができる
+assert_eq!(a, e);
 ```
 
 メモリレイアウトが最適化されていることは、以下のように確認できます。
@@ -56,6 +60,14 @@ assert_eq!(std::mem::size_of::<Option<NonMaxI128>>(), 16);
 |Floyd-Warshall法 ($V=5.0 \times 10^2, E = 5.0 \times 10^3$)|100ms/1.00MB|126ms/2.00MB|83ms/1.00MB|
 
 Dijkstra法において、`NonMax`を利用した場合が番兵を利用した場合よりも高速になっています。これは、`NonMaxU32`で`None`が`0`であることを利用した特殊な最適化が機能している結果です。
+
+## 競技プログラミング用のバンドル
+
+オンラインジャッジに提出する際、以下のコマンドを使用してライブラリを1つのファイルにまとめることができます。
+
+```bash
+(echo "pub mod arithmetic_nonmax {"; sed -e 's/#!\[no_std\]//' -e '/#\[cfg(test)\]/,$d' -e 's/\$crate/crate::arithmetic_nonmax/g' -e 's|//.*||' -e '/^[[:space:]]*$/d' src/lib.rs; echo "}") > bundled.rs
+```
 
 ## 使用例
 

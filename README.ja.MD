@@ -77,6 +77,7 @@ Dijkstra法において、`NonMax`を利用した場合が番兵を利用した�
 * [GRL_1_A: Single Source Shortest Path](examples/dijkstra.rs): Dijkstra法で距離を`Option<NonMax<u32>>`で表し、到達不可能であることを`None`で表す。
 * [GRL_1_C: All Pairs Shortest Path](examples/floyd_warshall.rs): Floyd-Warshall法で距離を`Option<NonMax<i32>>`で表し、到達不可能であることを`None`で表す。
 * [DSL_1_A: Disjoint Set](examples/union_find.rs): Union-Findで親の添え字を`Option<NonMaxUsize>`で管理する。
+* [DPL_1_A: Coin Changing Problem](examples/coin_change.rs): コイン問題を`Option<NonMax<u32>>`を用いたDPで解く。
 
 ## 関連ライブラリ
 

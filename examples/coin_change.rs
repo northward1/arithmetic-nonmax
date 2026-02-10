@@ -21,8 +21,8 @@ fn main() {
     let m = input!(usize);
 
     let mut coins = vec![0; m];
-    for i in 0..m {
-        coins[i] = input!(usize);
+    for coin in &mut coins {
+        *coin = input!(usize);
     }
 
     // dp[i] = minimum number of coins to pay amount i

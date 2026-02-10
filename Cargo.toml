@@ -10,6 +10,7 @@ keywords = ["nonmax", "optimization", "niche", "integer", "arithmetic"]
 categories = ["data-structures", "no-std", "embedded"]
 
 [features]
+default = ["std"]
 alloc = []
 std = ["alloc"]
 

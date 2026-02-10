@@ -620,6 +620,38 @@ impl<T: NonMaxItem + Copy + Display> Display for Value<T, Real> {
     }
 }
 
+impl<T> Index<NonMaxUsize> for [T] {
+    type Output = T;
+    #[inline]
+    fn index(&self, index: NonMaxUsize) -> &Self::Output {
+        &self[index.get()]
+    }
+}
+
+impl<T> IndexMut<NonMaxUsize> for [T] {
+    #[inline]
+    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
+        &mut self[index.get()]
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T> Index<NonMaxUsize> for alloc::vec::Vec<T> {
+    type Output = T;
+    #[inline]
+    fn index(&self, index: NonMaxUsize) -> &Self::Output {
+        &self[index.get()]
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T> IndexMut<NonMaxUsize> for alloc::vec::Vec<T> {
+    #[inline]
+    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
+        &mut self[index.get()]
+    }
+}
+
 #[cfg(test)]
 mod tests {
     extern crate std;
@@ -784,37 +816,5 @@ mod tests {
             v_vec_mut[idx] = 20;
             assert_eq!(v_vec_mut[1], 20);
         }
-    }
-}
-
-impl<T> Index<NonMaxUsize> for [T] {
-    type Output = T;
-    #[inline]
-    fn index(&self, index: NonMaxUsize) -> &Self::Output {
-        &self[index.get()]
-    }
-}
-
-impl<T> IndexMut<NonMaxUsize> for [T] {
-    #[inline]
-    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
-        &mut self[index.get()]
-    }
-}
-
-#[cfg(feature = "alloc")]
-impl<T> Index<NonMaxUsize> for alloc::vec::Vec<T> {
-    type Output = T;
-    #[inline]
-    fn index(&self, index: NonMaxUsize) -> &Self::Output {
-        &self[index.get()]
-    }
-}
-
-#[cfg(feature = "alloc")]
-impl<T> IndexMut<NonMaxUsize> for alloc::vec::Vec<T> {
-    #[inline]
-    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
-        &mut self[index.get()]
     }
 }

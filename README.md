@@ -57,6 +57,14 @@ Benchmarks are available in `benches/comparison.rs`. They compare execution time
 
 In the Dijkstra algorithm, the `NonMax` implementation is faster than using manual sentinel values. This is due to specialized optimizations leveraged by the internal representation where `None` is mapped to `0`.
 
+## Bundling for Competitive Programming
+
+When submitting to online judges, you can bundle the library into a single file using the following command:
+
+```bash
+(echo "pub mod arithmetic_nonmax {"; sed -e 's/#!\[no_std\]//' -e '/#\[cfg(test)\]/,$d' -e 's/\$crate/crate::arithmetic_nonmax/g' -e 's|//.*||' -e '/^[[:space:]]*$/d' src/lib.rs; echo "}") > bundled.rs
+```
+
 ## Examples
 
 You can find programs that solve [Aizu Online Judge](https://onlinejudge.u-aizu.ac.jp/home) problems using this library in the `examples/` directory.

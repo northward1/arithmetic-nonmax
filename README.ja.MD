@@ -57,6 +57,14 @@ assert_eq!(std::mem::size_of::<Option<NonMaxI128>>(), 16);
 
 Dijkstra法において、`NonMax`を利用した場合が番兵を利用した場合よりも高速になっています。これは、`NonMaxU32`で`None`が`0`であることを利用した特殊な最適化が機能している結果です。
 
+## 競技プログラミング用のバンドル
+
+オンラインジャッジに提出する際、以下のコマンドを使用してライブラリを1つのファイルにまとめることができます。
+
+```bash
+(echo "pub mod arithmetic_nonmax {"; sed -e 's/#!\[no_std\]//' -e '/#\[cfg(test)\]/,$d' -e 's/\$crate/crate::arithmetic_nonmax/g' -e 's|//.*||' -e '/^[[:space:]]*$/d' src/lib.rs; echo "}") > bundled.rs
+```
+
 ## 使用例
 
 このライブラリを使用して[Aizu Online Judge](https://onlinejudge.u-aizu.ac.jp/home)の問題にACできるプログラムを置いています。

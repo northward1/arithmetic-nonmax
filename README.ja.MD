@@ -20,6 +20,10 @@ assert_eq!(a, c);
 let d = a * 5; // 整数型とも四則演算ができる
 assert!(a < d);
 assert_eq!(d.to_string(), "25"); // 文字列に変換できる
+
+let array = [non_max!(3), non_max!(4), non_max!(5)];
+let e = array[non_max!(2)]; // 添え字によるアクセスができる
+assert_eq!(a, e);
 ```
 
 メモリレイアウトが最適化されていることは、以下のように確認できます。

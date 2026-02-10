@@ -19,7 +19,12 @@ use core::fmt::{self, Binary, Display, LowerHex, Octal, UpperHex};
 use core::hash::Hash;
 use core::marker::PhantomData;
 use core::num::NonZero;
-use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
+use core::ops::{
+    Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign,
+};
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
 
 /// Creates a `NonMax` value at compile-time.
 ///
@@ -758,5 +763,58 @@ mod tests {
 
         let z = non_max!(-10i32);
         assert_eq!(z.get(), -10);
+    }
+
+    #[test]
+    fn test_indexing() {
+        let v = [1, 2, 3];
+        let idx = NonMaxUsize::new(1).unwrap();
+        assert_eq!(v[idx], 2);
+
+        let mut v_mut = [1, 2, 3];
+        v_mut[idx] = 10;
+        assert_eq!(v_mut[1], 10);
+
+        #[cfg(feature = "alloc")]
+        {
+            let v_vec = std::vec![1, 2, 3];
+            assert_eq!(v_vec[idx], 2);
+
+            let mut v_vec_mut = std::vec![1, 2, 3];
+            v_vec_mut[idx] = 20;
+            assert_eq!(v_vec_mut[1], 20);
+        }
+    }
+}
+
+impl<T> Index<NonMaxUsize> for [T] {
+    type Output = T;
+    #[inline]
+    fn index(&self, index: NonMaxUsize) -> &Self::Output {
+        &self[index.get()]
+    }
+}
+
+impl<T> IndexMut<NonMaxUsize> for [T] {
+    #[inline]
+    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
+        &mut self[index.get()]
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T> Index<NonMaxUsize> for alloc::vec::Vec<T> {
+    type Output = T;
+    #[inline]
+    fn index(&self, index: NonMaxUsize) -> &Self::Output {
+        &self[index.get()]
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<T> IndexMut<NonMaxUsize> for alloc::vec::Vec<T> {
+    #[inline]
+    fn index_mut(&mut self, index: NonMaxUsize) -> &mut Self::Output {
+        &mut self[index.get()]
     }
 }

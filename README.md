@@ -20,6 +20,10 @@ assert_eq!(a, c);
 let d = a * 5; // Arithmetic operations with primitive integers
 assert!(a < d);
 assert_eq!(d.to_string(), "25"); // Can be converted to string
+
+let array = [non_max!(3), non_max!(4), non_max!(5)];
+let e = array[non_max!(2)]; // Support indexing
+assert_eq!(a, e);
 ```
 
 Memory layout optimization can be verified as follows:
@@ -73,6 +77,7 @@ Note that you need to bundle the library into a single file when submitting to a
 * [GRL_1_A: Single Source Shortest Path](examples/dijkstra.rs): Uses `Option<NonMax<u32>>` for distances, representing unreachable nodes as `None`.
 * [GRL_1_C: All Pairs Shortest Path](examples/floyd_warshall.rs): Uses `Option<NonMax<i32>>` for distances, representing unreachable nodes as `None`.
 * [DSL_1_A: Disjoint Set](examples/union_find.rs): Manages parent indices in a Union-Find data structure using `Option<NonMaxUsize>`.
+* [DPL_1_A: Coin Changing Problem](examples/coin_change.rs): Solves the coin change problem using DP with `Option<NonMax<u32>>`.
 
 ## Similar Libraries
 

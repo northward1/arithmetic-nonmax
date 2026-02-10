@@ -123,17 +123,17 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
 impl<T: NonMaxItem + Copy + PartialEq> NonMax<T> {
     /// Returns `true` if this is the minimum value.
     pub fn is_min(&self) -> bool {
-        self.get() == T::MIN_VALUE
+        self.to_real_repr() == Value::new(T::MIN_VALUE)
     }
 
     /// Returns `true` if this is the maximum possible value for this type.
     pub fn is_max(&self) -> bool {
-        self.get() == T::MAX_SAFE
+        self.to_real_repr() == Value::new(T::MAX_SAFE)
     }
 
     /// Returns `true` if the value is zero.
     pub fn is_zero(&self) -> bool {
-        self.get() == T::ZERO_VALUE
+        self.to_real_repr() == Value::new(T::ZERO_VALUE)
     }
 }
 
@@ -141,31 +141,46 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
     /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow occurred
     /// or if the result is the maximum value.
     pub fn checked_add(self, rhs: Self) -> Option<Self> {
-        self.get().checked_add(rhs.get()).and_then(Self::new)
+        self.to_real_repr()
+            .checked_add(rhs.to_real_repr())?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked integer subtraction. Computes `self - rhs`, returning `None` if overflow occurred
     /// or if the result is the maximum value.
     pub fn checked_sub(self, rhs: Self) -> Option<Self> {
-        self.get().checked_sub(rhs.get()).and_then(Self::new)
+        self.to_real_repr()
+            .checked_sub(rhs.to_real_repr())?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked integer multiplication. Computes `self * rhs`, returning `None` if overflow occurred
     /// or if the result is the maximum value.
     pub fn checked_mul(self, rhs: Self) -> Option<Self> {
-        self.get().checked_mul(rhs.get()).and_then(Self::new)
+        self.to_real_repr()
+            .checked_mul(rhs.to_real_repr())?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked integer division. Computes `self / rhs`, returning `None` if the divisor is zero
     /// or if the result is the maximum value.
     pub fn checked_div(self, rhs: Self) -> Option<Self> {
-        self.get().checked_div(rhs.get()).and_then(Self::new)
+        self.to_real_repr()
+            .checked_div(rhs.to_real_repr())?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked integer remainder. Computes `self % rhs`, returning `None` if the divisor is zero
     /// or if the result is the maximum value.
     pub fn checked_rem(self, rhs: Self) -> Option<Self> {
-        self.get().checked_rem(rhs.get()).and_then(Self::new)
+        self.to_real_repr()
+            .checked_rem(rhs.to_real_repr())?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked addition with a primitive value.
@@ -178,27 +193,42 @@ impl<T: NonMaxItem + Copy> NonMax<T> {
     /// assert!(x.checked_add_val(155).is_none()); // 255 is MAX
     /// ```
     pub fn checked_add_val(self, rhs: T) -> Option<Self> {
-        self.get().checked_add(rhs).and_then(Self::new)
+        self.to_real_repr()
+            .checked_add(Value::new(rhs))?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked subtraction with a primitive value.
     pub fn checked_sub_val(self, rhs: T) -> Option<Self> {
-        self.get().checked_sub(rhs).and_then(Self::new)
+        self.to_real_repr()
+            .checked_sub(Value::new(rhs))?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked multiplication with a primitive value.
     pub fn checked_mul_val(self, rhs: T) -> Option<Self> {
-        self.get().checked_mul(rhs).and_then(Self::new)
+        self.to_real_repr()
+            .checked_mul(Value::new(rhs))?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked division with a primitive value.
     pub fn checked_div_val(self, rhs: T) -> Option<Self> {
-        self.get().checked_div(rhs).and_then(Self::new)
+        self.to_real_repr()
+            .checked_div(Value::new(rhs))?
+            .to_inner_repr()
+            .to_nonmax()
     }
 
     /// Checked remainder with a primitive value.
     pub fn checked_rem_val(self, rhs: T) -> Option<Self> {
-        self.get().checked_rem(rhs).and_then(Self::new)
+        self.to_real_repr()
+            .checked_rem(Value::new(rhs))?
+            .to_inner_repr()
+            .to_nonmax()
     }
 }
 
@@ -356,31 +386,31 @@ impl<T: NonMaxItem + Copy + Ord> Ord for NonMax<T> {
 
 impl<T: NonMaxItem + Copy + Display> Display for NonMax<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        Display::fmt(&self.get(), f)
+        Display::fmt(&self.to_real_repr(), f)
     }
 }
 
 impl<T: NonMaxItem + Copy + Binary> Binary for NonMax<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        Binary::fmt(&self.get(), f)
+        Binary::fmt(&self.to_real_repr(), f)
     }
 }
 
 impl<T: NonMaxItem + Copy + Octal> Octal for NonMax<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        Octal::fmt(&self.get(), f)
+        Octal::fmt(&self.to_real_repr(), f)
     }
 }
 
 impl<T: NonMaxItem + Copy + LowerHex> LowerHex for NonMax<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        LowerHex::fmt(&self.get(), f)
+        LowerHex::fmt(&self.to_real_repr(), f)
     }
 }
 
 impl<T: NonMaxItem + Copy + UpperHex> UpperHex for NonMax<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        UpperHex::fmt(&self.get(), f)
+        UpperHex::fmt(&self.to_real_repr(), f)
     }
 }
 
@@ -555,6 +585,26 @@ impl<T: NonMaxItem + Copy> Value<T, Real> {
     fn to_inner_repr(self) -> Value<T, Inner> {
         Value::new(T::transform(self.value))
     }
+
+    fn checked_add(self, rhs: Self) -> Option<Self> {
+        self.value().checked_add(rhs.value()).map(Self::new)
+    }
+
+    fn checked_sub(self, rhs: Self) -> Option<Self> {
+        self.value().checked_sub(rhs.value()).map(Self::new)
+    }
+
+    fn checked_mul(self, rhs: Self) -> Option<Self> {
+        self.value().checked_mul(rhs.value()).map(Self::new)
+    }
+
+    fn checked_div(self, rhs: Self) -> Option<Self> {
+        self.value().checked_div(rhs.value()).map(Self::new)
+    }
+
+    fn checked_rem(self, rhs: Self) -> Option<Self> {
+        self.value().checked_rem(rhs.value()).map(Self::new)
+    }
 }
 
 impl<T: NonMaxItem + Copy + Add<Output = T>> Add for Value<T, Real> {
@@ -617,6 +667,30 @@ impl<T: NonMaxItem + Copy + Ord> Ord for Value<T, Real> {
 impl<T: NonMaxItem + Copy + Display> Display for Value<T, Real> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.value())
+    }
+}
+
+impl<T: NonMaxItem + Copy + Binary> Binary for Value<T, Real> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        Binary::fmt(&self.value(), f)
+    }
+}
+
+impl<T: NonMaxItem + Copy + Octal> Octal for Value<T, Real> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        Octal::fmt(&self.value(), f)
+    }
+}
+
+impl<T: NonMaxItem + Copy + LowerHex> LowerHex for Value<T, Real> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        LowerHex::fmt(&self.value(), f)
+    }
+}
+
+impl<T: NonMaxItem + Copy + UpperHex> UpperHex for Value<T, Real> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        UpperHex::fmt(&self.value(), f)
     }
 }
 

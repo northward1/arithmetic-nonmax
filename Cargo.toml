@@ -1,6 +1,6 @@
 [package]
 name = "arithmetic-nonmax"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 description = "Integer types that cannot be the maximum value, allowing for memory layout optimization and intuitive arithmetic operations."
 license = "CC0-1.0"

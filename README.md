@@ -29,7 +29,7 @@ assert_eq!(f / 2, e);
 
 ## Benchmarks
 
-The following values are based on measurements using `iai` and `divan`. `NonMax` achieves the same memory savings as the sentinel method (the fastest) while allowing for more efficient operations (reduced instruction counts) than the standard `Option`.
+The following values are measured using `iai` and `divan`. `NonMax` achieves the same memory savings as the sentinel method (the fastest) while enabling more efficient operations and reduced instruction counts compared to the standard `Option`.
 
 ### Instruction-based Benchmarks (`benches/iai_comparison.rs`)
 

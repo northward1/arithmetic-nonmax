@@ -4,17 +4,17 @@
 [![Docs.rs](https://docs.rs/arithmetic-nonmax/badge.svg)](https://docs.rs/arithmetic-nonmax)
 [![License](https://img.shields.io/crates/l/arithmetic-nonmax.svg)](LICENSE)
 
-`arithmetic-nonmax`クレートは、整数型がその最大値を取らないことが保証されているとき、`NonMax*`型を利用できるようにします。これを利用することで、Rustのニッチ最適化（Niche Optimization）が働き、`Option<NonMax*>` のサイズが元の整数型と同じになるなど、メモリレイアウトの最適化を受けることができます。
+`arithmetic-nonmax`クレートは、整数型がその最大値を取らないことが保証されているとき、`NonMax*`型を利用できるようにします。これを利用することで、Rustのニッチ最適化（Niche Optimization）が働き、`Option<NonMax*>`のサイズが元の整数型と同じになるなど、メモリレイアウトの最適化を受けることができます。
 
 また、四則演算を以下のように直感的に記述できます。例えば、最短経路問題では、`Option<NonMax*>`型を使うことで、型システムを活用しながら、メモリレイアウトの最適化も行えます。それについては、[ベンチマーク](#ベンチマーク)を参考にしてください。
 
 ## ベンチマーク
 
-以下の数値は、`iai` および `divan` を用いた計測結果です。`NonMax` は、番兵方式（最速）と同等のメモリ節約を実現しつつ、標準の `Option` よりも効率的な操作（命令数の削減）が可能です。
+以下の数値は`iai`および`divan`を用いた計測結果です。`NonMax`は最速である番兵方式と同等のメモリ節約を実現しつつ、標準の`Option`よりも効率的な操作や命令数の削減が可能です。
 
 ### 命令数ベースのベンチマーク(`benches/iai_comparison.rs`)
 
-`iai` を用いて、各型の操作における命令数（Instructions）を計測しました。
+`iai`を用いて、各型の操作における命令数（Instructions）を計測しました。
 
 #### i32
 | 操作 (i32) | `NonMax` | `Option<i32>` | `Raw (Sentinel)` |
@@ -32,12 +32,12 @@
 | 加算 (`add`) | 30 | 41 | 25 |
 | 比較 (`cmp`) | 30 | 32 | 26 |
 
-数値は `iai` による計測結果（x86_64環境）。比較 (`cmp`) は無限大（None/MAX）を考慮した比較のコストを計測しています。
-詳細なレポートは `bench_result_iai.txt` を参照してください。
+数値は`iai`による計測結果（x86_64環境）。比較 (`cmp`) は無限大（None/MAX）を考慮した比較のコストを計測しています。
+詳細なレポートは`bench_result_iai.txt`を参照してください。
 
 ### 実行時間・メモリ使用量ベースのベンチマーク(`benches/comparison.rs`)
 
-`divan` を用いて、実用的なアルゴリズムや大規模なデータの操作におけるパフォーマンスを計測しました。
+`divan`を用いて、実用的なアルゴリズムや大規模なデータの操作におけるパフォーマンスを計測しました。
 
 #### アルゴリズム
 | アルゴリズム (u32) | 指標 | `NonMax` | `Option<u32>` | `Sentinel (MAX)` |
@@ -54,8 +54,8 @@
 | 合計 (`sum`) | 0.54 ms | 0.64 ms | 0.15 ms |
 | 更新 (`update`) | 1.9 ms | 2.0 ms | 1.9 ms |
 
-数値は `divan` による計測結果（x86_64環境、中央値）。
-詳細なレポートは `bench_result.txt` を参照してください。
+数値は`divan`による計測結果（x86_64環境、中央値）。
+詳細なレポートは`bench_result.txt`を参照してください。
 
 ## 競技プログラミング用のバンドル
 

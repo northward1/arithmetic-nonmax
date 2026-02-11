@@ -287,7 +287,7 @@ mod floyd_warshall {
 mod dijkstra {
     use super::*;
 
-    const GRAPH_SIZES: &[usize] = &[1000, 10000, 100000];
+    const GRAPH_SIZES: &[usize] = &[1000, 10000, 100000, 500000];
 
     #[derive(Copy, Clone, Eq, PartialEq)]
     struct State<T> {

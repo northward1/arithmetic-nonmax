@@ -78,10 +78,14 @@ macro_rules! bench_ops {
 
 // Target types for iai
 bench_ops!(
-    NonMaxU32, u32,
-    NonMaxI32, i32,
-    NonMaxUsize, usize,
-    NonMaxIsize, isize
+    NonMaxU32,
+    u32,
+    NonMaxI32,
+    i32,
+    NonMaxUsize,
+    usize,
+    NonMaxIsize,
+    isize
 );
 
 main!(
@@ -98,7 +102,6 @@ main!(
     bench_cmp_nonmax_nonmaxu32,
     bench_cmp_primitive_nonmaxu32,
     bench_cmp_raw_nonmaxu32,
-
     // i32
     bench_new_nonmax_nonmaxi32,
     bench_new_primitive_nonmaxi32,
@@ -112,7 +115,6 @@ main!(
     bench_cmp_nonmax_nonmaxi32,
     bench_cmp_primitive_nonmaxi32,
     bench_cmp_raw_nonmaxi32,
-
     // usize
     bench_new_nonmax_nonmaxusize,
     bench_new_primitive_nonmaxusize,
@@ -126,7 +128,6 @@ main!(
     bench_cmp_nonmax_nonmaxusize,
     bench_cmp_primitive_nonmaxusize,
     bench_cmp_raw_nonmaxusize,
-
     // isize
     bench_new_nonmax_nonmaxisize,
     bench_new_primitive_nonmaxisize,

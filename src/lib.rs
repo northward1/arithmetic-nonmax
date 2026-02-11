@@ -11,6 +11,23 @@
 //! | `u32`     | 4                | 8                        | **4**                           |
 //! | `i32`     | 4                | 8                        | **4**                           |
 //! | `u8`      | 1                | 2                        | **1**                           |
+//!
+//! # Examples
+//!
+//! ```
+//! use arithmetic_nonmax::*;
+//! use core::mem::size_of;
+//!
+//! // The size of Option<NonMax*> is the same as the underlying primitive type.
+//! assert_eq!(size_of::<Option<NonMaxU32>>(), 4);
+//! assert_eq!(size_of::<Option<u32>>(), 8);
+//!
+//! assert_eq!(size_of::<Option<NonMaxI32>>(), 4);
+//! assert_eq!(size_of::<Option<i32>>(), 8);
+//!
+//! assert_eq!(size_of::<Option<NonMaxU8>>(), 1);
+//! assert_eq!(size_of::<Option<u8>>(), 2);
+//! ```
 
 #![no_std]
 

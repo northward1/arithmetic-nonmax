@@ -1,148 +1,143 @@
-use arithmetic_nonmax::NonMaxU32;
+use arithmetic_nonmax::*;
 use iai::{black_box, main};
+use paste::paste;
 
-const ITERS: u32 = 1000;
+macro_rules! bench_ops {
+    ($($t:ident, $prim:ident),*) => {
+        paste! {
+            $(
+                // --- NonMax ---
+                fn [<bench_new_nonmax_ $t:lower>]() {
+                    let _ = black_box($t::new(black_box(10)));
+                }
 
-fn bench_new_nonmax() {
-    for i in 0..ITERS {
-        let _ = black_box(NonMaxU32::new(black_box(i)));
-    }
-}
+                fn [<bench_get_nonmax_ $t:lower>]() {
+                    let val = black_box($t::new(10).unwrap());
+                    let _ = black_box(val.get());
+                }
 
-fn bench_new_primitive() {
-    for i in 0..ITERS {
-        let _ = black_box(Some(black_box(i)));
-    }
-}
+                fn [<bench_add_nonmax_ $t:lower>]() {
+                    let a = black_box($t::new(10).unwrap());
+                    let b = black_box($t::new(5).unwrap());
+                    let _ = black_box(a.checked_add(b));
+                }
 
-fn bench_new_raw() {
-    for i in 0..ITERS {
-        let _ = black_box(i);
-    }
-}
+                fn [<bench_cmp_nonmax_ $t:lower>]() {
+                    let curr = black_box($t::new(20));
+                    let next = black_box($t::new(10).unwrap());
+                    let _ = black_box(curr.is_none() || Some(next) < curr);
+                }
 
-fn bench_add_nonmax() {
-    let a = NonMaxU32::new(100).unwrap();
-    let b = NonMaxU32::new(50).unwrap();
-    for _ in 0..ITERS {
-        let _ = black_box(black_box(a).checked_add(black_box(b)));
-    }
-}
+                // --- Option<Primitive> ---
+                fn [<bench_new_primitive_ $t:lower>]() {
+                    let _ = black_box(Some(black_box(10 as $prim)));
+                }
 
-fn bench_add_primitive() {
-    let a = Some(100u32);
-    let b = Some(50u32);
-    for _ in 0..ITERS {
-        let _ = black_box(black_box(a).and_then(|x| x.checked_add(black_box(b).unwrap())));
-    }
-}
+                fn [<bench_get_primitive_ $t:lower>]() {
+                    let val = black_box(Some(10 as $prim));
+                    let _ = black_box(val.unwrap());
+                }
 
-fn bench_add_raw() {
-    let a = 100u32;
+                fn [<bench_add_primitive_ $t:lower>]() {
+                    let a = black_box(Some(10 as $prim));
+                    let b = black_box(Some(5 as $prim));
+                    let _ = black_box(a.and_then(|x| x.checked_add(b.unwrap())));
+                }
 
-    let b = 50u32;
+                fn [<bench_cmp_primitive_ $t:lower>]() {
+                    let curr = black_box(Some(20 as $prim));
+                    let next = black_box(10 as $prim);
+                    let _ = black_box(curr.is_none() || Some(next) < curr);
+                }
 
-    for _ in 0..ITERS {
-        let _ = black_box(black_box(a).wrapping_add(black_box(b)));
-    }
-}
+                // --- Raw Primitive (Sentinel baseline) ---
+                fn [<bench_new_raw_ $t:lower>]() {
+                    let _ = black_box(black_box(10 as $prim));
+                }
 
-// --- Logic Steps (Dijkstra / FW) ---
+                fn [<bench_get_raw_ $t:lower>]() {
+                    let val = black_box(10 as $prim);
+                    let _ = black_box(val);
+                }
 
-fn bench_dijkstra_step_nonmax() {
-    let mut dists: [Option<NonMaxU32>; 1] = black_box([None; 1]);
-    let cost = black_box(NonMaxU32::new(100).unwrap());
-    let edge_cost = black_box(50u32);
-    for i in 0..ITERS {
-        let next_dist = cost.get() + edge_cost + (black_box(i) & 1);
-        if dists[0].is_none() || Some(NonMaxU32::new(next_dist).unwrap()) < dists[0] {
-            dists[0] = NonMaxU32::new(next_dist);
+                fn [<bench_add_raw_ $t:lower>]() {
+                    let a = black_box(10 as $prim);
+                    let b = black_box(5 as $prim);
+                    let _ = black_box(a.wrapping_add(b));
+                }
+
+                fn [<bench_cmp_raw_ $t:lower>]() {
+                    let curr = black_box($prim::MAX);
+                    let next = black_box(10 as $prim);
+                    let _ = black_box(next < curr);
+                }
+            )*
         }
-        black_box(&dists);
-    }
+    };
 }
 
-fn bench_dijkstra_step_primitive() {
-    let mut dists: [Option<u32>; 1] = black_box([None; 1]);
-    let cost = black_box(Some(100u32));
-    let edge_cost = black_box(50u32);
-    for i in 0..ITERS {
-        let next_dist = cost.unwrap() + edge_cost + (black_box(i) & 1);
-        if dists[0].is_none() || Some(next_dist) < dists[0] {
-            dists[0] = Some(next_dist);
-        }
-        black_box(&dists);
-    }
-}
-
-fn bench_fw_step_nonmax() {
-    let mut dist: [Option<NonMaxU32>; 3] =
-        black_box([None, NonMaxU32::new(100), NonMaxU32::new(50)]);
-    for i in 0..ITERS {
-        if let (Some(dik), Some(dkj)) = (dist[1], dist[2]) {
-            let new_dist = dik + dkj.get() + (black_box(i) & 1);
-            if dist[0].is_none() || Some(new_dist) < dist[0] {
-                dist[0] = Some(new_dist);
-            }
-        }
-        black_box(&dist);
-    }
-}
-
-fn bench_fw_step_primitive() {
-    let mut dist: [Option<u32>; 3] = black_box([None, Some(100u32), Some(50u32)]); // [ij, ik, kj]
-
-    for i in 0..ITERS {
-        if let (Some(dik), Some(dkj)) = (dist[1], dist[2]) {
-            let new_dist = dik + dkj + (black_box(i) & 1);
-
-            if dist[0].is_none() || Some(new_dist) < dist[0] {
-                dist[0] = Some(new_dist);
-            }
-        }
-
-        black_box(&dist);
-    }
-}
-
-fn bench_dijkstra_step_nonmax_unchecked() {
-    let mut dists: [Option<NonMaxU32>; 1] = black_box([None; 1]);
-    let cost = black_box(NonMaxU32::new(100).unwrap());
-    let edge_cost = black_box(50u32);
-    for i in 0..ITERS {
-        let next_dist = cost.get() + edge_cost + (black_box(i) & 1);
-        if dists[0].is_none() || unsafe { Some(NonMaxU32::new_unchecked(next_dist)) } < dists[0] {
-            dists[0] = unsafe { Some(NonMaxU32::new_unchecked(next_dist)) };
-        }
-        black_box(&dists);
-    }
-}
-
-fn bench_fw_step_nonmax_unchecked() {
-    let mut dist: [Option<NonMaxU32>; 3] =
-        black_box([None, NonMaxU32::new(100), NonMaxU32::new(50)]);
-    for i in 0..ITERS {
-        if let (Some(dik), Some(dkj)) = (dist[1], dist[2]) {
-            let new_dist = dik.get() + dkj.get() + (black_box(i) & 1);
-            if dist[0].is_none() || unsafe { Some(NonMaxU32::new_unchecked(new_dist)) } < dist[0] {
-                dist[0] = unsafe { Some(NonMaxU32::new_unchecked(new_dist)) };
-            }
-        }
-        black_box(&dist);
-    }
-}
+// Target types for iai
+bench_ops!(
+    NonMaxU32, u32,
+    NonMaxI32, i32,
+    NonMaxUsize, usize,
+    NonMaxIsize, isize
+);
 
 main!(
-    bench_new_nonmax,
-    bench_new_primitive,
-    bench_new_raw,
-    bench_add_nonmax,
-    bench_add_primitive,
-    bench_add_raw,
-    bench_dijkstra_step_nonmax,
-    bench_dijkstra_step_primitive,
-    bench_dijkstra_step_nonmax_unchecked,
-    bench_fw_step_nonmax,
-    bench_fw_step_primitive,
-    bench_fw_step_nonmax_unchecked
+    // u32
+    bench_new_nonmax_nonmaxu32,
+    bench_new_primitive_nonmaxu32,
+    bench_new_raw_nonmaxu32,
+    bench_get_nonmax_nonmaxu32,
+    bench_get_primitive_nonmaxu32,
+    bench_get_raw_nonmaxu32,
+    bench_add_nonmax_nonmaxu32,
+    bench_add_primitive_nonmaxu32,
+    bench_add_raw_nonmaxu32,
+    bench_cmp_nonmax_nonmaxu32,
+    bench_cmp_primitive_nonmaxu32,
+    bench_cmp_raw_nonmaxu32,
+
+    // i32
+    bench_new_nonmax_nonmaxi32,
+    bench_new_primitive_nonmaxi32,
+    bench_new_raw_nonmaxi32,
+    bench_get_nonmax_nonmaxi32,
+    bench_get_primitive_nonmaxi32,
+    bench_get_raw_nonmaxi32,
+    bench_add_nonmax_nonmaxi32,
+    bench_add_primitive_nonmaxi32,
+    bench_add_raw_nonmaxi32,
+    bench_cmp_nonmax_nonmaxi32,
+    bench_cmp_primitive_nonmaxi32,
+    bench_cmp_raw_nonmaxi32,
+
+    // usize
+    bench_new_nonmax_nonmaxusize,
+    bench_new_primitive_nonmaxusize,
+    bench_new_raw_nonmaxusize,
+    bench_get_nonmax_nonmaxusize,
+    bench_get_primitive_nonmaxusize,
+    bench_get_raw_nonmaxusize,
+    bench_add_nonmax_nonmaxusize,
+    bench_add_primitive_nonmaxusize,
+    bench_add_raw_nonmaxusize,
+    bench_cmp_nonmax_nonmaxusize,
+    bench_cmp_primitive_nonmaxusize,
+    bench_cmp_raw_nonmaxusize,
+
+    // isize
+    bench_new_nonmax_nonmaxisize,
+    bench_new_primitive_nonmaxisize,
+    bench_new_raw_nonmaxisize,
+    bench_get_nonmax_nonmaxisize,
+    bench_get_primitive_nonmaxisize,
+    bench_get_raw_nonmaxisize,
+    bench_add_nonmax_nonmaxisize,
+    bench_add_primitive_nonmaxisize,
+    bench_add_raw_nonmaxisize,
+    bench_cmp_nonmax_nonmaxisize,
+    bench_cmp_primitive_nonmaxisize,
+    bench_cmp_raw_nonmaxisize
 );

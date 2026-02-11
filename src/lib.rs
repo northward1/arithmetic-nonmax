@@ -927,10 +927,10 @@ mod tests {
             NonMaxU32::new(2).unwrap(),
             NonMaxU32::new(3).unwrap(),
         ];
-        
+
         let sum: NonMaxU32 = v.iter().copied().sum();
         assert_eq!(sum.get(), 6);
-        
+
         let sum_ref: NonMaxU32 = v.iter().sum();
         assert_eq!(sum_ref.get(), 6);
 

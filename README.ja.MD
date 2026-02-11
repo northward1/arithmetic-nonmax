@@ -8,6 +8,24 @@
 
 また、四則演算を以下のように直感的に記述できます。例えば、最短経路問題では、`Option<NonMax*>`型を使うことで、型システムを活用しながら、メモリレイアウトの最適化も行えます。それについては、[ベンチマーク](#ベンチマーク)を参考にしてください。
 
+```rust
+use arithmetic_nonmax::{NonMaxU32, non_max};
+
+let a: NonMaxU32 = NonMaxU32::new(5).unwrap();
+
+let b = non_max!(10); // non_max!マクロで簡潔に値を生成できる
+let c = b - a; // NonMaxU32同士で四則演算ができる 
+assert_eq!(a, c);
+
+let d = a * 5; // 整数型とも四則演算ができる
+assert!(a < d);
+assert_eq!(d.to_string(), "25"); // 文字列に変換できる
+
+let array = [non_max!(3), non_max!(4), non_max!(5)];
+let e = array[non_max!(2)]; // 添え字によるアクセスができる
+assert_eq!(a, e);
+```
+
 ## ベンチマーク
 
 以下の数値は`iai`および`divan`を用いた計測結果です。`NonMax`は最速である番兵方式と同等のメモリ節約を実現しつつ、標準の`Option`よりも効率的な操作や命令数の削減が可能です。
@@ -17,7 +35,7 @@
 `iai`を用いて、各型の操作における命令数（Instructions）を計測しました。
 
 #### i32
-| 操作 (i32) | `NonMax` | `Option<i32>` | `Raw (Sentinel)` |
+| 操作 (i32) | `Option<NonMaxI32>` | `Option<i32>` | `Raw (Sentinel)` |
 | :--- | :---: | :---: | :---: |
 | 生成 (`new`) | 24 | 25 | 23 |
 | 取得 (`get`) | 24 | 29 | 23 |
@@ -25,7 +43,7 @@
 | 比較 (`cmp`) | 30 | 32 | 26 |
 
 #### usize
-| 操作 (usize) | `NonMax` | `Option<usize>` | `Raw (Sentinel)` |
+| 操作 (usize) | `Option<NonMaxUsize>` | `Option<usize>` | `Raw (Sentinel)` |
 | :--- | :---: | :---: | :---: |
 | 生成 (`new`) | 24 | 25 | 23 |
 | 取得 (`get`) | 24 | 29 | 23 |
@@ -40,19 +58,19 @@
 `divan`を用いて、実用的なアルゴリズムや大規模なデータの操作におけるパフォーマンスを計測しました。
 
 #### アルゴリズム
-| アルゴリズム (u32) | 指標 | `NonMax` | `Option<u32>` | `Sentinel (MAX)` |
+| アルゴリズム (u32) | 指標 | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :--- | :---: | :---: | :---: |
-| Floyd-Warshall<br>($V=400$) | 実行時間 | 51 ms | 56 ms | 45 ms |
+| Floyd-Warshall<br>($V=400$) | 実行時間 | 52 ms | 55 ms | 45 ms |
 | | メモリ使用量 | 640 KB | 1.3 MB | 640 KB |
-| Dijkstra<br>($V=100,000$) | 実行時間 | 44 ms | 45 ms | 43 ms |
-| | メモリ使用量 | 2.5 MB | 2.9 MB | 2.5 MB |
+| Dijkstra<br>($V=500,000$) | 実行時間 | 340 ms | 380 ms | 340 ms |
+| | メモリ使用量 | 19 MB | 21 MB | 19 MB |
 
 #### 大規模なデータの操作 ($N=1,000,000$)
-| 操作 (u32) | `NonMax` | `Option<u32>` | `Sentinel (MAX)` |
+| 操作 (u32) | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :---: | :---: | :---: |
-| ソート (`sort`) | 74 ms | 41 ms | 18 ms |
-| 合計 (`sum`) | 0.54 ms | 0.64 ms | 0.15 ms |
-| 更新 (`update`) | 1.9 ms | 2.0 ms | 1.9 ms |
+| ソート (`sort`) | 70 ms | 31 ms | 17 ms |
+| 合計 (`sum`) | 0.51 ms | 0.58 ms | 0.24 ms |
+| 更新 (`update`) | 1.9 ms | 1.9 ms | 1.9 ms |
 
 数値は`divan`による計測結果（x86_64環境、中央値）。
 詳細なレポートは`bench_result.txt`を参照してください。
@@ -82,4 +100,4 @@
 
 ## ライセンス
 
-[CC0ライセンス](LICENSE)
+[CC0 1.0 Universal](LICENSE)

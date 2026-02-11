@@ -11,6 +11,23 @@
 //! | `u32`     | 4                | 8                        | **4**                           |
 //! | `i32`     | 4                | 8                        | **4**                           |
 //! | `u8`      | 1                | 2                        | **1**                           |
+//!
+//! # Examples
+//!
+//! ```
+//! use arithmetic_nonmax::*;
+//! use core::mem::size_of;
+//!
+//! // The size of Option<NonMax*> is the same as the underlying primitive type.
+//! assert_eq!(size_of::<Option<NonMaxU32>>(), 4);
+//! assert_eq!(size_of::<Option<u32>>(), 8);
+//!
+//! assert_eq!(size_of::<Option<NonMaxI32>>(), 4);
+//! assert_eq!(size_of::<Option<i32>>(), 8);
+//!
+//! assert_eq!(size_of::<Option<NonMaxU8>>(), 1);
+//! assert_eq!(size_of::<Option<u8>>(), 2);
+//! ```
 
 #![no_std]
 
@@ -420,6 +437,32 @@ impl<T: NonMaxItem + Copy> Default for NonMax<T> {
     }
 }
 
+use core::iter::{Product, Sum};
+
+impl<T: NonMaxItem + Copy + Add<Output = T>> Sum for NonMax<T> {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(Self::new(T::ZERO_VALUE).unwrap(), |a, b| a + b)
+    }
+}
+
+impl<'a, T: NonMaxItem + Copy + Add<Output = T>> Sum<&'a NonMax<T>> for NonMax<T> {
+    fn sum<I: Iterator<Item = &'a Self>>(iter: I) -> Self {
+        iter.fold(Self::new(T::ZERO_VALUE).unwrap(), |a, b| a + *b)
+    }
+}
+
+impl<T: NonMaxItem + Copy + Mul<Output = T>> Product for NonMax<T> {
+    fn product<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(Self::new(T::ONE_VALUE).unwrap(), |a, b| a * b)
+    }
+}
+
+impl<'a, T: NonMaxItem + Copy + Mul<Output = T>> Product<&'a NonMax<T>> for NonMax<T> {
+    fn product<I: Iterator<Item = &'a Self>>(iter: I) -> Self {
+        iter.fold(Self::new(T::ONE_VALUE).unwrap(), |a, b| a * *b)
+    }
+}
+
 #[doc(hidden)]
 pub trait NonMaxItem: Sized {
     type NonZero: Copy + PartialEq + Eq + PartialOrd + Ord + Hash;
@@ -427,6 +470,7 @@ pub trait NonMaxItem: Sized {
     const MAX: Self;
     const MAX_SAFE: Self;
     const ZERO_VALUE: Self;
+    const ONE_VALUE: Self;
     fn transform(self) -> Self;
     fn to_nonzero(value: Value<Self, Inner>) -> Option<Self::NonZero>;
     unsafe fn to_nonzero_unchecked(value: Value<Self, Inner>) -> Self::NonZero;
@@ -454,6 +498,7 @@ macro_rules! impl_non_max_item {
                 const MAX: Self = <$t>::MAX;
                 const MAX_SAFE: Self = <$t>::MAX - 1;
                 const ZERO_VALUE: Self = 0;
+                const ONE_VALUE: Self = 1;
                 fn transform(self) -> Self {
                     self ^ <$t>::MAX
                 }
@@ -890,5 +935,34 @@ mod tests {
             v_vec_mut[idx] = 20;
             assert_eq!(v_vec_mut[1], 20);
         }
+    }
+
+    #[test]
+    fn test_sum_product() {
+        let v = [
+            NonMaxU32::new(1).unwrap(),
+            NonMaxU32::new(2).unwrap(),
+            NonMaxU32::new(3).unwrap(),
+        ];
+
+        let sum: NonMaxU32 = v.iter().copied().sum();
+        assert_eq!(sum.get(), 6);
+
+        let sum_ref: NonMaxU32 = v.iter().sum();
+        assert_eq!(sum_ref.get(), 6);
+
+        let prod: NonMaxU32 = v.iter().copied().product();
+        assert_eq!(prod.get(), 6);
+
+        let prod_ref: NonMaxU32 = v.iter().product();
+        assert_eq!(prod_ref.get(), 6);
+
+        // Test empty iterator
+        let empty: [NonMaxU32; 0] = [];
+        let sum_empty: NonMaxU32 = empty.iter().sum();
+        assert_eq!(sum_empty.get(), 0);
+
+        let prod_empty: NonMaxU32 = empty.iter().product();
+        assert_eq!(prod_empty.get(), 1);
     }
 }

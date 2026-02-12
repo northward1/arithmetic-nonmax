@@ -21,8 +21,8 @@ let d = a * 5; // Arithmetic with integer types
 assert!(a < d);
 assert_eq!(d.to_string(), "25"); // Conversion to string
 
-let array = [non_max!(3), non_max!(4), non_max!(5)];
-let e = array[non_max!(2)]; // Access by index
+let array = ["5".parse::<NonMaxU32>().unwrap()]; // Create NonMax from string
+let e = array[non_max!(0)]; // Access by index
 assert_eq!(a, e);
 ```
 

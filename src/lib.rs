@@ -55,6 +55,7 @@ use core::num::NonZero;
 use core::ops::{
     Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign,
 };
+use core::str::FromStr;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
@@ -106,7 +107,32 @@ impl Display for MaxValueError {
     }
 }
 
-impl core::error::Error for MaxValueError {}
+/// Error type returned when parsing a `NonMax` value from a string fails.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ParseNonMaxError {
+    /// The value could not be parsed as the underlying integer type.
+    Parse(core::num::ParseIntError),
+    /// The parsed value was the maximum value for the type.
+    IsMax,
+}
+
+impl Display for ParseNonMaxError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Parse(e) => write!(f, "{}", e),
+            Self::IsMax => write!(f, "provided value is the maximum value for this type"),
+        }
+    }
+}
+
+impl core::error::Error for ParseNonMaxError {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+        match self {
+            Self::Parse(e) => Some(e),
+            Self::IsMax => None,
+        }
+    }
+}
 
 /// A wrapper type for an integer that cannot be its maximum value.
 ///
@@ -553,6 +579,15 @@ macro_rules! impl_non_max_item {
                 }
             }
 
+            impl FromStr for NonMax<$t> {
+                type Err = ParseNonMaxError;
+
+                fn from_str(s: &str) -> Result<Self, Self::Err> {
+                    let val = <$t>::from_str(s).map_err(ParseNonMaxError::Parse)?;
+                    Self::new(val).ok_or(ParseNonMaxError::IsMax)
+                }
+            }
+
             #[doc = $doc]
             pub type $name = NonMax<$t>;
 
@@ -951,6 +986,18 @@ mod tests {
             v_vec_mut[idx] = 20;
             assert_eq!(v_vec_mut[1], 20);
         }
+    }
+
+    #[test]
+    fn test_from_str() {
+        let x: NonMaxU32 = "123".parse().unwrap();
+        assert_eq!(x.get(), 123);
+
+        let err = "abc".parse::<NonMaxU32>().unwrap_err();
+        assert!(matches!(err, ParseNonMaxError::Parse(_)));
+
+        let err_max = "4294967295".parse::<NonMaxU32>().unwrap_err();
+        assert_eq!(err_max, ParseNonMaxError::IsMax);
     }
 
     #[test]

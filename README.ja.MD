@@ -51,7 +51,7 @@ assert_eq!(a, e);
 | 比較 (`cmp`) | 30 | 32 | 26 |
 
 数値は`iai`による計測結果（x86_64環境）。比較 (`cmp`) は無限大（None/MAX）を考慮した比較のコストを計測しています。
-詳細なレポートは`bench_result_iai.txt`を参照してください。
+詳細なレポートは`bench_result_iai.txt`を参照してください。`cargo bench --bench iai_comparison > bench_result_iai.txt 2>/dev/null`を実行して生成されています。
 
 ### 実行時間・メモリ使用量ベースのベンチマーク(`benches/comparison.rs`)
 
@@ -60,20 +60,20 @@ assert_eq!(a, e);
 #### アルゴリズム
 | アルゴリズム (u32) | 指標 | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :--- | :---: | :---: | :---: |
-| Floyd-Warshall<br>($V=400$) | 実行時間 | 52 ms | 55 ms | 45 ms |
+| Floyd-Warshall<br>($V=400$) | 実行時間 | 54 ms | 56 ms | 45 ms |
 | | メモリ使用量 | 640 KB | 1.3 MB | 640 KB |
-| Dijkstra<br>($V=500,000$) | 実行時間 | 340 ms | 380 ms | 340 ms |
+| Dijkstra<br>($V=500,000$) | 実行時間 | 330 ms | 410 ms | 350 ms |
 | | メモリ使用量 | 19 MB | 21 MB | 19 MB |
 
 #### 大規模なデータの操作 ($N=1,000,000$)
 | 操作 (u32) | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :---: | :---: | :---: |
 | ソート (`sort`) | 70 ms | 31 ms | 17 ms |
-| 合計 (`sum`) | 0.51 ms | 0.58 ms | 0.24 ms |
-| 更新 (`update`) | 1.9 ms | 1.9 ms | 1.9 ms |
+| 合計 (`sum`) | 0.48 ms | 0.45 ms | 0.094 ms |
+| 更新 (`update`) | 1.9 ms | 2.0 ms | 1.9 ms |
 
 数値は`divan`による計測結果（x86_64環境、中央値）。
-詳細なレポートは`bench_result.txt`を参照してください。
+詳細なレポートは`bench_result.txt`を参照してください。`cargo bench --bench comparison > bench_result.txt 2>/dev/null`を実行して生成されています。
 
 ## 競技プログラミング用のバンドル
 

@@ -59,17 +59,17 @@ We measured performance in practical algorithms and large-scale data operations 
 #### Algorithms
 | Algorithm (u32) | Metric | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :--- | :---: | :---: | :---: |
-| Floyd-Warshall<br>($V=400$) | Execution Time | 52 ms | 55 ms | 45 ms |
+| Floyd-Warshall<br>($V=400$) | Execution Time | 54 ms | 56 ms | 45 ms |
 | | Memory Usage | 640 KB | 1.3 MB | 640 KB |
-| Dijkstra<br>($V=500,000$) | Execution Time | 340 ms | 380 ms | 340 ms |
+| Dijkstra<br>($V=500,000$) | Execution Time | 330 ms | 410 ms | 350 ms |
 | | Memory Usage | 19 MB | 21 MB | 19 MB |
 
 #### Large-scale Data Operations ($N=1,000,000$)
 | Operation (u32) | `Option<NonMaxU32>` | `Option<u32>` | `Sentinel (MAX)` |
 | :--- | :---: | :---: | :---: |
 | Sort (`sort`) | 70 ms | 31 ms | 17 ms |
-| Sum (`sum`) | 0.51 ms | 0.58 ms | 0.24 ms |
-| Update (`update`) | 1.9 ms | 1.9 ms | 1.9 ms |
+| Sum (`sum`) | 0.48 ms | 0.45 ms | 0.094 ms |
+| Update (`update`) | 1.9 ms | 2.0 ms | 1.9 ms |
 
 *Measured on an x86_64 environment (median). For a full report, see `bench_result.txt`.*
 

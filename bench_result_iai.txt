@@ -1,89 +1,86 @@
-   Compiling arithmetic-nonmax v0.4.0 (/home/naut3/arithmetic-nonmax)
-    Finished `bench` profile [optimized] target(s) in 0.31s
-     Running benches/iai_comparison.rs (target/release/deps/iai_comparison-bac8f18c8b00953a)
 bench_new_nonmax_nonmaxu32
-  Instructions:                  19 (No change)
-  L1 Accesses:                   27 (+8.000000%)
+  Instructions:                   9 (-52.63158%)
+  L1 Accesses:                   13 (-50.00000%)
   L2 Accesses:                    1 (-50.00000%)
-  RAM Accesses:                   2 (-33.33333%)
-  Estimated Cycles:             102 (-27.14286%)
+  RAM Accesses:                   2 (No change)
+  Estimated Cycles:              88 (-16.98113%)
 
 bench_new_primitive_nonmaxu32
-  Instructions:                  20 (No change)
-  L1 Accesses:                   28 (+3.703704%)
+  Instructions:                  10 (-50.00000%)
+  L1 Accesses:                   14 (-50.00000%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (-33.33333%)
-  Estimated Cycles:             108 (-23.94366%)
+  RAM Accesses:                   2 (No change)
+  Estimated Cycles:              94 (-12.96296%)
 
 bench_new_raw_nonmaxu32
-  Instructions:                  18 (No change)
-  L1 Accesses:                   25 (No change)
+  Instructions:                   8 (-55.55556%)
+  L1 Accesses:                   11 (-56.00000%)
   L2 Accesses:                    2 (No change)
   RAM Accesses:                   2 (No change)
-  Estimated Cycles:             105 (No change)
+  Estimated Cycles:              91 (-13.33333%)
 
 bench_get_nonmax_nonmaxu32
-  Instructions:                  19 (No change)
-  L1 Accesses:                   26 (No change)
+  Instructions:                   9 (-52.63158%)
+  L1 Accesses:                   12 (-53.84615%)
   L2 Accesses:                    2 (No change)
   RAM Accesses:                   2 (No change)
-  Estimated Cycles:             106 (No change)
+  Estimated Cycles:              92 (-13.20755%)
 
 bench_get_primitive_nonmaxu32
-  Instructions:                  24 (No change)
-  L1 Accesses:                   32 (+3.225806%)
+  Instructions:                  14 (-41.66667%)
+  L1 Accesses:                   18 (-43.75000%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (-33.33333%)
-  Estimated Cycles:             112 (-23.28767%)
+  RAM Accesses:                   2 (No change)
+  Estimated Cycles:              98 (-12.50000%)
 
 bench_get_raw_nonmaxu32
-  Instructions:                  18 (No change)
-  L1 Accesses:                   25 (No change)
+  Instructions:                   8 (-55.55556%)
+  L1 Accesses:                   11 (-56.00000%)
   L2 Accesses:                    2 (No change)
   RAM Accesses:                   2 (No change)
-  Estimated Cycles:             105 (No change)
+  Estimated Cycles:              91 (-13.33333%)
 
 bench_add_nonmax_nonmaxu32
-  Instructions:                  25 (No change)
-  L1 Accesses:                   33 (No change)
+  Instructions:                  15 (-40.00000%)
+  L1 Accesses:                   19 (-42.42424%)
   L2 Accesses:                    2 (No change)
   RAM Accesses:                   3 (No change)
-  Estimated Cycles:             148 (No change)
+  Estimated Cycles:             134 (-9.459459%)
 
 bench_add_primitive_nonmaxu32
-  Instructions:                  36 (No change)
-  L1 Accesses:                   47 (No change)
+  Instructions:                  26 (-27.77778%)
+  L1 Accesses:                   33 (-29.78723%)
   L2 Accesses:                    2 (No change)
   RAM Accesses:                   3 (No change)
-  Estimated Cycles:             162 (No change)
+  Estimated Cycles:             148 (-8.641975%)
 
 bench_add_raw_nonmaxu32
-  Instructions:                  20 (No change)
-  L1 Accesses:                   30 (+3.448276%)
+  Instructions:                  10 (-50.00000%)
+  L1 Accesses:                   16 (-46.66667%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   1 (-50.00000%)
-  Estimated Cycles:              75 (-31.19266%)
+  RAM Accesses:                   1 (No change)
+  Estimated Cycles:              61 (-18.66667%)
 
 bench_cmp_nonmax_nonmaxu32
-  Instructions:                  25 (No change)
-  L1 Accesses:                   34 (No change)
-  L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (No change)
-  Estimated Cycles:             114 (No change)
+  Instructions:                  15 (-37.50000%)
+  L1 Accesses:                   20 (-35.48387%)
+  L2 Accesses:                    2 (-33.33333%)
+  RAM Accesses:                   2 (-33.33333%)
+  Estimated Cycles:             100 (-33.77483%)
 
 bench_cmp_primitive_nonmaxu32
   Instructions:                  32 (No change)
-  L1 Accesses:                   41 (-2.380952%)
+  L1 Accesses:                   41 (-4.651163%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   3 (+50.00000%)
-  Estimated Cycles:             156 (+27.86885%)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             156 (+77.27273%)
 
 bench_cmp_raw_nonmaxu32
   Instructions:                  26 (No change)
-  L1 Accesses:                   34 (-5.555556%)
+  L1 Accesses:                   34 (-2.857143%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   3 (+200.0000%)
-  Estimated Cycles:             149 (+83.95062%)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             149 (+29.56522%)
 
 bench_new_nonmax_nonmaxi32
   Instructions:                  24 (No change)
@@ -94,10 +91,10 @@ bench_new_nonmax_nonmaxi32
 
 bench_new_primitive_nonmaxi32
   Instructions:                  25 (No change)
-  L1 Accesses:                   33 (No change)
+  L1 Accesses:                   33 (-2.941176%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (No change)
-  Estimated Cycles:             113 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             113 (+43.03797%)
 
 bench_new_raw_nonmaxi32
   Instructions:                  23 (No change)
@@ -109,16 +106,16 @@ bench_new_raw_nonmaxi32
 bench_get_nonmax_nonmaxi32
   Instructions:                  24 (No change)
   L1 Accesses:                   31 (No change)
-  L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (No change)
-  Estimated Cycles:             111 (No change)
+  L2 Accesses:                    2 (-33.33333%)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             111 (+37.03704%)
 
 bench_get_primitive_nonmaxi32
   Instructions:                  29 (No change)
-  L1 Accesses:                   37 (No change)
+  L1 Accesses:                   37 (-2.631579%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   2 (No change)
-  Estimated Cycles:             117 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             117 (+40.96386%)
 
 bench_get_raw_nonmaxi32
   Instructions:                  23 (No change)
@@ -136,31 +133,31 @@ bench_add_nonmax_nonmaxi32
 
 bench_add_primitive_nonmaxi32
   Instructions:                  41 (No change)
-  L1 Accesses:                   51 (No change)
-  L2 Accesses:                    2 (-33.33333%)
-  RAM Accesses:                   4 (+33.33333%)
-  Estimated Cycles:             201 (+17.54386%)
+  L1 Accesses:                   51 (-3.773585%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   4 (+100.0000%)
+  Estimated Cycles:             201 (+51.12782%)
 
 bench_add_raw_nonmaxi32
   Instructions:                  25 (No change)
-  L1 Accesses:                   35 (No change)
+  L1 Accesses:                   35 (-2.777778%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   1 (No change)
-  Estimated Cycles:              80 (No change)
+  RAM Accesses:                   1 (  +inf%)
+  Estimated Cycles:              80 (+73.91304%)
 
 bench_cmp_nonmax_nonmaxi32
-  Instructions:                  30 (No change)
-  L1 Accesses:                   38 (-5.000000%)
+  Instructions:                  30 (+3.448276%)
+  L1 Accesses:                   38 (No change)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   3 (+200.0000%)
-  Estimated Cycles:             153 (+80.00000%)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             153 (+29.66102%)
 
 bench_cmp_primitive_nonmaxi32
   Instructions:                  32 (No change)
-  L1 Accesses:                   41 (-2.380952%)
+  L1 Accesses:                   41 (-4.651163%)
   L2 Accesses:                    2 (No change)
-  RAM Accesses:                   3 (+50.00000%)
-  Estimated Cycles:             156 (+27.86885%)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             156 (+77.27273%)
 
 bench_cmp_raw_nonmaxi32
   Instructions:                  26 (No change)
@@ -170,170 +167,170 @@ bench_cmp_raw_nonmaxi32
   Estimated Cycles:             115 (+41.97531%)
 
 bench_new_nonmax_nonmaxusize
-  Instructions:                  24 (-99.43249%)
-  L1 Accesses:                   31 (-99.42229%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   2 (-98.87006%)
-  Estimated Cycles:             111 (-99.03654%)
+  Instructions:                  24 (No change)
+  L1 Accesses:                   31 (-3.125000%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             111 (+44.15584%)
 
 bench_new_primitive_nonmaxusize
-  Instructions:                  25
-  L1 Accesses:                   33
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             113
+  Instructions:                  25 (No change)
+  L1 Accesses:                   33 (-2.941176%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             113 (+43.03797%)
 
 bench_new_raw_nonmaxusize
-  Instructions:                  23
-  L1 Accesses:                   30
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             110
+  Instructions:                  23 (No change)
+  L1 Accesses:                   30 (-3.225806%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             110 (+44.73684%)
 
 bench_get_nonmax_nonmaxusize
-  Instructions:                  24 (-99.43316%)
-  L1 Accesses:                   31 (-99.42283%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   2 (-98.87006%)
-  Estimated Cycles:             111 (-99.03696%)
+  Instructions:                  24 (No change)
+  L1 Accesses:                   31 (No change)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (No change)
+  Estimated Cycles:             111 (No change)
 
 bench_get_primitive_nonmaxusize
-  Instructions:                  29
-  L1 Accesses:                   37
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             152
+  Instructions:                  29 (No change)
+  L1 Accesses:                   37 (-5.128205%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             152 (+80.95238%)
 
 bench_get_raw_nonmaxusize
-  Instructions:                  23
-  L1 Accesses:                   29
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             144
+  Instructions:                  23 (No change)
+  L1 Accesses:                   29 (-3.333333%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             144 (+30.90909%)
 
 bench_add_nonmax_nonmaxusize
-  Instructions:                  30 (-99.29245%)
-  L1 Accesses:                   38 (-99.29342%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   3 (-98.30508%)
-  Estimated Cycles:             153 (-98.67395%)
+  Instructions:                  30 (No change)
+  L1 Accesses:                   38 (-2.564103%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             153 (+28.57143%)
 
 bench_add_primitive_nonmaxusize
-  Instructions:                  41
-  L1 Accesses:                   54
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             169
+  Instructions:                  41 (No change)
+  L1 Accesses:                   54 (No change)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (No change)
+  Estimated Cycles:             169 (No change)
 
 bench_add_raw_nonmaxusize
-  Instructions:                  25
-  L1 Accesses:                   33
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             148
+  Instructions:                  25 (No change)
+  L1 Accesses:                   33 (-2.941176%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             148 (+29.82456%)
 
 bench_cmp_nonmax_nonmaxusize
-  Instructions:                  30 (-99.29775%)
-  L1 Accesses:                   38 (-99.29812%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   3 (-98.31461%)
-  Estimated Cycles:             153 (-98.68262%)
+  Instructions:                  30 (+3.448276%)
+  L1 Accesses:                   38 (-2.564103%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             153 (+82.14286%)
 
 bench_cmp_primitive_nonmaxusize
-  Instructions:                  32
-  L1 Accesses:                   42
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             157
+  Instructions:                  32 (No change)
+  L1 Accesses:                   42 (-2.325581%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             157 (+27.64228%)
 
 bench_cmp_raw_nonmaxusize
-  Instructions:                  26
-  L1 Accesses:                   35
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             115
+  Instructions:                  26 (No change)
+  L1 Accesses:                   35 (-2.777778%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             115 (+41.97531%)
 
 bench_new_nonmax_nonmaxisize
-  Instructions:                  24 (-99.43316%)
-  L1 Accesses:                   30 (-99.44144%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   3 (-98.30508%)
-  Estimated Cycles:             145 (-98.74197%)
+  Instructions:                  24 (No change)
+  L1 Accesses:                   30 (-6.250000%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             145 (+88.31169%)
 
 bench_new_primitive_nonmaxisize
-  Instructions:                  25
-  L1 Accesses:                   33
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             113
+  Instructions:                  25 (No change)
+  L1 Accesses:                   33 (-2.941176%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             113 (+43.03797%)
 
 bench_new_raw_nonmaxisize
-  Instructions:                  23
-  L1 Accesses:                   30
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             110
+  Instructions:                  23 (No change)
+  L1 Accesses:                   30 (-3.225806%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             110 (+44.73684%)
 
 bench_get_nonmax_nonmaxisize
-  Instructions:                  25 (-99.40968%)
-  L1 Accesses:                   32 (-99.40432%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   2 (-98.86364%)
-  Estimated Cycles:             112 (-99.02583%)
+  Instructions:                  25 (No change)
+  L1 Accesses:                   32 (-3.030303%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             112 (+43.58974%)
 
 bench_get_primitive_nonmaxisize
-  Instructions:                  29
-  L1 Accesses:                   37
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             152
+  Instructions:                  29 (No change)
+  L1 Accesses:                   37 (-5.128205%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+200.0000%)
+  Estimated Cycles:             152 (+80.95238%)
 
 bench_get_raw_nonmaxisize
-  Instructions:                  23
-  L1 Accesses:                   29
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             144
+  Instructions:                  23 (No change)
+  L1 Accesses:                   29 (-3.333333%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             144 (+30.90909%)
 
 bench_add_nonmax_nonmaxisize
-  Instructions:                  35 (-99.17550%)
-  L1 Accesses:                   43 (-99.20134%)
-  L2 Accesses:                    2 (-100.0000%)
-  RAM Accesses:                   3 (-98.30508%)
-  Estimated Cycles:             158 (-98.63073%)
+  Instructions:                  35 (No change)
+  L1 Accesses:                   43 (No change)
+  L2 Accesses:                    2 (-33.33333%)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             158 (+23.43750%)
 
 bench_add_primitive_nonmaxisize
-  Instructions:                  41
-  L1 Accesses:                   54
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             169
+  Instructions:                  41 (No change)
+  L1 Accesses:                   54 (+1.886792%)
+  L2 Accesses:                    2 (-33.33333%)
+  RAM Accesses:                   3 (No change)
+  Estimated Cycles:             169 (-2.312139%)
 
 bench_add_raw_nonmaxisize
-  Instructions:                  25
-  L1 Accesses:                   32
-  L2 Accesses:                    3
-  RAM Accesses:                   3
-  Estimated Cycles:             152
+  Instructions:                  25 (No change)
+  L1 Accesses:                   32 (-5.882353%)
+  L2 Accesses:                    3 (+50.00000%)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             152 (+33.33333%)
 
 bench_cmp_nonmax_nonmaxisize
-  Instructions:                  32 (-99.25164%)
-  L1 Accesses:                   39 (-99.28018%)
-  L2 Accesses:                    3 (-100.0000%)
-  RAM Accesses:                   3 (-98.31461%)
-  Estimated Cycles:             159 (-98.63143%)
+  Instructions:                  32 (+3.225806%)
+  L1 Accesses:                   39 (-2.500000%)
+  L2 Accesses:                    3 (+50.00000%)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             159 (+32.50000%)
 
 bench_cmp_primitive_nonmaxisize
-  Instructions:                  32
-  L1 Accesses:                   42
-  L2 Accesses:                    2
-  RAM Accesses:                   3
-  Estimated Cycles:             157
+  Instructions:                  32 (No change)
+  L1 Accesses:                   42 (-2.325581%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   3 (+50.00000%)
+  Estimated Cycles:             157 (+27.64228%)
 
 bench_cmp_raw_nonmaxisize
-  Instructions:                  27
-  L1 Accesses:                   36
-  L2 Accesses:                    2
-  RAM Accesses:                   2
-  Estimated Cycles:             116
+  Instructions:                  27 (No change)
+  L1 Accesses:                   36 (-2.702703%)
+  L2 Accesses:                    2 (No change)
+  RAM Accesses:                   2 (+100.0000%)
+  Estimated Cycles:             116 (+41.46341%)
 

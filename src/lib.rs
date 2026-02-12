@@ -1,10 +1,17 @@
-//! `NonMax` provides integer types that cannot be the maximum value of their underlying primitive type.
+//! `arithmetic-nonmax` provides integer types that are guaranteed to never be their maximum value (`MAX`).
 //!
-//! # Memory Optimization
+//! # Main Features
 //!
-//! The main benefit of `NonMax<T>` is that `Option<NonMax<T>>` has the same size as `T`.
-//! This is achieved through Rust's "niche optimization", where the bit pattern of the
-//! maximum value is used to represent `None`.
+//! - **Memory Efficiency**: `Option<NonMax<T>>` is the same size as `T`.
+//! - **Intuitive Arithmetic**: Supports standard operators (`+`, `-`, `*`, `/`, `%`) and their assign variants.
+//! - **Type Safety**: Prevents the use of the sentinel value (`MAX`) at both compile-time and runtime.
+//! - **Zero Cost**: Most operations are as fast as primitive integers.
+//!
+//! # How it works
+//!
+//! This crate leverages Rust's "niche optimization" using [`core::num::NonZero`].
+//! Internally, it transforms the value by XORing it with `MAX`, effectively mapping `MAX` to `0`.
+//! This allows `Option<NonMax<T>>` to use the bit pattern of `MAX` to represent `None`.
 //!
 //! | Primitive | `size_of::<T>()` | `size_of::<Option<T>>()` | `size_of::<Option<NonMax<T>>>()` |
 //! |-----------|------------------|--------------------------|---------------------------------|
@@ -12,21 +19,30 @@
 //! | `i32`     | 4                | 8                        | **4**                           |
 //! | `u8`      | 1                | 2                        | **1**                           |
 //!
+//! # Panic Behavior
+//!
+//! Arithmetic operations (`+`, `-`, etc.) will panic if:
+//! - An overflow or underflow occurs.
+//! - The result of the operation is the maximum value of the underlying type.
+//!
+//! Use `checked_*` methods if you want to handle these cases without panicking.
+//!
 //! # Examples
 //!
 //! ```
 //! use arithmetic_nonmax::*;
-//! use core::mem::size_of;
 //!
-//! // The size of Option<NonMax*> is the same as the underlying primitive type.
-//! assert_eq!(size_of::<Option<NonMaxU32>>(), 4);
-//! assert_eq!(size_of::<Option<u32>>(), 8);
+//! // Memory optimization
+//! assert_eq!(core::mem::size_of::<Option<NonMaxU32>>(), 4);
 //!
-//! assert_eq!(size_of::<Option<NonMaxI32>>(), 4);
-//! assert_eq!(size_of::<Option<i32>>(), 8);
+//! // Arithmetic operations
+//! let a = non_max!(100u8);
+//! let b = a + 50;
+//! assert_eq!(b.get(), 150);
 //!
-//! assert_eq!(size_of::<Option<NonMaxU8>>(), 1);
-//! assert_eq!(size_of::<Option<u8>>(), 2);
+//! // Use with Option
+//! let opt: Option<NonMaxU32> = NonMaxU32::new(core::u32::MAX);
+//! assert!(opt.is_none());
 //! ```
 
 #![no_std]
